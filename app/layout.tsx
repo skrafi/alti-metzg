@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { Cormorant_Garamond, Inter, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import Navigation from "@/components/Navigation";
-import Footer from "@/components/Footer";
 import ScrollProgress from "@/components/ScrollProgress";
 
 const cormorant = Cormorant_Garamond({
@@ -63,7 +62,6 @@ export default function RootLayout({
         <ScrollProgress />
         <Navigation />
         <main>{children}</main>
-        <Footer />
       </body>
     </html>
   );
