@@ -1,412 +1,634 @@
 "use client";
 
-import { motion } from "framer-motion";
-import Image from "next/image";
-import Link from "next/link";
-import { ArrowRight, Wine } from "lucide-react";
+import { motion, useInView } from "framer-motion";
+import { useEffect, useRef, useState } from "react";
+import GlobalFooter from "@/components/GlobalFooter";
 
-const features = [
-  {
-    number: "01",
-    title: "Regionale Weine",
-    description: "Eine Auswahl an Weinen aus der Region und darüber hinaus. Lass Dich beraten und entdecke Neues.",
-    image: "/images/apero-platter.jpg",
-  },
-  {
-    number: "02",
-    title: "Apéroplättli",
-    description: "Regionale Spezialitäten auf dem Holzbrett. Käse, Fleisch, Eingemachtes – alles aus der Region.",
-    image: "/images/meal-02.jpg",
-  },
-  {
-    number: "03",
-    title: "Atmosphäre",
-    description: "Natursteinwände, Holzmöbel und gedimmtes Licht schaffen eine Atmosphäre, die zum Bleiben einlädt.",
-    image: "/images/carnotzet-interior.jpg",
-  },
-];
+// Reveal Section Wrapper
+function RevealSection({ children, delay = 0 }: { children: React.ReactNode; delay?: number }) {
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true, margin: "-100px" });
 
-const aperoItems = [
-  { name: "Alpkäse", desc: "Aus der Jungfrauregion" },
-  { name: "Landjäger", desc: "Lokale Metzgerei" },
-  { name: "Brot & Butter", desc: "Frisch vom Dorfladen" },
-  { name: "Eingemachtes", desc: "Saisonales aus dem Glas" },
-];
-
-const revealVariants = {
-  hidden: { opacity: 0, y: 30 },
-  visible: { opacity: 1, y: 0 },
-};
+  return (
+    <motion.div
+      ref={ref}
+      initial={{ opacity: 0, y: 30 }}
+      animate={isInView ? { opacity: 1, y: 0 } : {}}
+      transition={{ duration: 0.8, delay }}
+    >
+      {children}
+    </motion.div>
+  );
+}
 
 export default function CarnotzetPage() {
-  return (
-    <div style={{ backgroundColor: "var(--charcoal)", color: "var(--warm-white)" }}>
-      {/* HERO - Full screen with vignette */}
-      <section className="relative h-screen min-h-[700px] overflow-hidden">
-        <div className="absolute inset-0">
-          <Image
-            src="/images/carnotzet-hero.jpg"
-            alt="Carnotzet"
-            fill
-            className="object-cover"
-            priority
-            sizes="100vw"
-          />
-          {/* Vignette effect */}
-          <div className="absolute inset-0 bg-gradient-radial from-transparent via-charcoal/60 to-charcoal" />
-        </div>
+  const [heroImageY, setHeroImageY] = useState(0);
+  const heroImageRef = useRef<HTMLDivElement>(null);
 
-        {/* Content - Centered */}
-        <div className="relative h-full flex flex-col justify-center px-6 lg:px-16 pt-20">
-          <motion.div
-            initial={{ opacity: 0, y: 40 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1 }}
-            className="max-w-2xl mx-auto text-center"
-          >
-            <p className="eyebrow-brass mb-8">
-              Der Keller · Privatanlässe · Regionale Weine
+  // Parallax effect
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollY = window.scrollY;
+      setHeroImageY(scrollY * 0.25);
+    };
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  // Get today's info for Öffnungszeiten
+  const getTodayInfo = () => {
+    const days = [
+      { short: "Mo", isClosed: true },
+      { short: "Di", time: "17:00–23:00" },
+      { short: "Mi", time: "17:00–23:00" },
+      { short: "Do", time: "17:00–23:00" },
+      { short: "Fr", time: "16:00–00:00" },
+      { short: "Sa", time: "16:00–00:00" },
+      { short: "So", time: "16:00–22:00" }
+    ];
+    const todayIdx = new Date().getDay() === 0 ? 6 : new Date().getDay() - 1;
+    return { days, todayIdx, todayTime: days[todayIdx].isClosed ? "Geschlossen" : days[todayIdx].time };
+  };
+
+  const { days, todayIdx, todayTime } = getTodayInfo();
+
+  return (
+    <>
+      <style>{`
+        @keyframes scrollLine {
+          0% { transform: scaleY(0); opacity: 1 }
+          100% { transform: scaleY(1); opacity: 0 }
+        }
+      `}</style>
+
+      {/* HERO */}
+      <section style={{ height: "92vh", position: "relative", overflow: "hidden" }}>
+        {/* Zdjęcie fullscreen z parallax */}
+        <div
+          ref={heroImageRef}
+          style={{
+            position: "absolute",
+            inset: 0,
+            backgroundImage: "url('/images/carnotzet-hero.jpg')",
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+            transform: `scale(1.06) translateY(${heroImageY}px)`,
+            willChange: "transform"
+          }}
+        />
+
+        {/* Overlay */}
+        <div
+          style={{
+            position: "absolute",
+            inset: 0,
+            background: `linear-gradient(
+              160deg,
+              rgba(30,30,28,0.55) 0%,
+              rgba(30,30,28,0.25) 50%,
+              rgba(30,30,28,0.65) 100%
+            )`
+          }}
+        />
+
+        {/* Content */}
+        <div style={{ position: "absolute", bottom: "80px", left: "80px", zIndex: 2, maxWidth: "680px" }}>
+          <RevealSection>
+            <p className="eyebrow" style={{ color: "var(--stone)", marginBottom: "20px" }}>
+              DER KELLER · REGIONALE WEINE · PRIVATANLÄSSE
             </p>
-            <h1 className="display-hero mb-8">
-              Carnotzet
-            </h1>
-            <p className="body-lg opacity-70 max-w-md mx-auto mb-12">
-              Natursteinwände. Gedimmtes Licht. Regionale Weine.
-              Eine Atmosphäre die zum Bleiben einlädt.
-            </p>
-            <Link
-              href="#reservation"
-              className="btn min-h-[44px] min-w-[44px]"
+            <h1
               style={{
-                backgroundColor: "var(--charcoal)",
-                color: "var(--warm-white)"
+                fontFamily: "var(--font-display)",
+                fontSize: "clamp(64px, 9vw, 120px)",
+                fontWeight: 300,
+                fontStyle: "italic",
+                lineHeight: 0.92,
+                letterSpacing: "-0.02em",
+                color: "#FFFFFF",
+                marginBottom: "8px"
               }}
             >
-              Voranmeldung & Anfrage
-              <ArrowRight size={14} />
-            </Link>
-          </motion.div>
+              Das
+            </h1>
+            <h1
+              style={{
+                fontFamily: "var(--font-display)",
+                fontSize: "clamp(64px, 9vw, 120px)",
+                fontWeight: 600,
+                fontStyle: "normal",
+                lineHeight: 0.92,
+                letterSpacing: "-0.02em",
+                color: "#FFFFFF",
+                marginBottom: "32px"
+              }}
+            >
+              Carnotzet.
+            </h1>
+            <p
+              style={{
+                fontFamily: "var(--font-body)",
+                fontSize: "16px",
+                fontWeight: 300,
+                color: "rgba(255,255,255,0.6)",
+                lineHeight: 1.7,
+                maxWidth: "440px",
+                marginBottom: "40px"
+              }}
+            >
+              Aus der alten Metzgerei wurde ein Raum für gute Abende. Wein, Gesellschaft, Atmosphäre.
+            </p>
+            <a href="#reservierung" className="btn btn-brass">
+              Tisch reservieren
+            </a>
+          </RevealSection>
         </div>
 
-        {/* Scroll indicator */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 1.5 }}
-          className="absolute bottom-10 left-1/2 -translate-x-1/2"
+        {/* Prawa strona — pionowy label */}
+        <div
+          style={{
+            position: "absolute",
+            right: "40px",
+            top: "50%",
+            transform: "translateY(-50%) rotate(90deg)",
+            transformOrigin: "center",
+            fontFamily: "var(--font-body)",
+            fontSize: "9px",
+            fontWeight: 400,
+            letterSpacing: "0.3em",
+            textTransform: "uppercase",
+            color: "rgba(255,255,255,0.2)",
+            whiteSpace: "nowrap"
+          }}
         >
-          <motion.div
-            animate={{ y: [0, 20, 0] }}
-            transition={{ duration: 2.5, repeat: Infinity }}
-            className="w-px h-16"
-            style={{
-              backgroundImage: "linear-gradient(to bottom, var(--aged-brass), transparent)"
-            }}
-          />
-        </motion.div>
+          ALTI METZG · CARNOTZET
+        </div>
       </section>
 
-      {/* DIE GESCHICHTE - Centered text with vignette */}
-      <section className="section-padding-lg relative overflow-hidden">
-        <div className="absolute inset-0">
-          <Image
-            src="/images/carnotzet-interior.jpg"
-            alt="Carnotzet Geschichte"
-            fill
-            className="object-cover"
-            sizes="100vw"
-          />
-          <div className="absolute inset-0 bg-charcoal/90" style={{ backgroundColor: "rgba(30,30,28,0.9)" }} />
+      {/* DER ABEND — deep-forest */}
+      <section
+        style={{
+          background: "var(--deep-forest)",
+          padding: "120px 80px",
+          position: "relative",
+          overflow: "hidden"
+        }}
+      >
+        {/* Ghost text dekoracja */}
+        <div
+          style={{
+            position: "absolute",
+            fontFamily: "var(--font-display)",
+            fontSize: "280px",
+            fontWeight: 600,
+            color: "rgba(255,255,255,0.02)",
+            bottom: "-40px",
+            right: "-20px",
+            lineHeight: 1,
+            userSelect: "none",
+            pointerEvents: "none",
+            letterSpacing: "-0.04em"
+          }}
+        >
+          KELLER
         </div>
 
-        <div className="container-narrow container-padding relative z-10">
-          <motion.div
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            variants={revealVariants}
-            className="text-center"
+        <RevealSection>
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "1fr 1fr",
+              gap: "80px",
+              alignItems: "center",
+              position: "relative",
+              zIndex: 1
+            }}
           >
-            <p className="eyebrow-brass mb-8">
-              Früher · Jetzt
-            </p>
-            <h2 className="section-title mb-10">
-              Aus der alten Metzgerei...
-            </h2>
-            <p className="body-lg opacity-80 mb-12 max-w-2xl mx-auto">
-              Wo einst ein dunkler Keller war, glänzt nun im neuen Kleid ein gemütliches Carnotzet.
-              Der alte Keller der Metzgerei wurde mit viel Liebe zum Detail in
-              einen Ort verwandelt, der zum Verweilen einlädt.
-            </p>
+            {/* Lewa — placeholder zdjęcia */}
+            <div
+              style={{
+                aspectRatio: "4/5",
+                background: "#1a2a1e",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center"
+              }}
+            >
+              <p style={{ fontFamily: "monospace", fontSize: "12px", opacity: 0.25, color: "white" }}>
+                carnotzet-01.jpg
+              </p>
+            </div>
 
-            {/* Timeline */}
-            <div className="flex justify-center gap-12">
-              <div>
-                <div className="w-2 h-2 rounded-full mx-auto mb-4" style={{ backgroundColor: "var(--aged-brass)" }} />
-                <p className="body-xs font-medium tracking-[0.2em] uppercase mb-1 opacity-40">Früher</p>
-                <p className="body-md opacity-60">Alte Metzgerei</p>
-              </div>
-              <div>
-                <div className="w-2 h-2 rounded-full mx-auto mb-4" style={{ backgroundColor: "var(--aged-brass)" }} />
-                <p className="body-xs font-medium tracking-[0.2em] uppercase mb-1 opacity-40">Die Idee</p>
-                <p className="body-md opacity-60">2021</p>
-              </div>
-              <div>
-                <div className="w-2 h-2 rounded-full mx-auto mb-4" style={{ backgroundColor: "var(--aged-brass)" }} />
-                <p className="body-xs font-medium tracking-[0.2em] uppercase mb-1 opacity-40">Heute</p>
-                <p className="body-md opacity-60">Carnotzet</p>
+            {/* Prawa — tekst */}
+            <div>
+              <p className="eyebrow" style={{ color: "rgba(255,255,255,0.3)", marginBottom: "24px" }}>
+                DER KELLER
+              </p>
+              <h2
+                style={{
+                  fontFamily: "var(--font-display)",
+                  fontSize: "clamp(40px, 5vw, 64px)",
+                  fontWeight: 300,
+                  fontStyle: "italic",
+                  color: "#FFFFFF",
+                  lineHeight: 1,
+                  marginBottom: "32px"
+                }}
+              >
+                Ein Ort für
+                <br />
+                <strong style={{ fontWeight: 600, fontStyle: "normal" }}>gute Abende.</strong>
+              </h2>
+              <p
+                style={{
+                  fontSize: "16px",
+                  fontWeight: 300,
+                  color: "rgba(255,255,255,0.5)",
+                  lineHeight: 1.8,
+                  marginBottom: "48px"
+                }}
+              >
+                Natursteinwände, Holzdecken, gedimmtes Licht.
+                Der ehemalige Keller der Metzgerei wurde zum
+                gemütlichsten Raum in Mürren.
+              </p>
+
+              {/* 3 fakty */}
+              <div
+                style={{
+                  display: "grid",
+                  gridTemplateColumns: "repeat(3, 1fr)",
+                  gap: "0",
+                  borderTop: "1px solid rgba(255,255,255,0.08)",
+                  paddingTop: "40px"
+                }}
+              >
+                {[
+                  { num: "12–20", label: "Personen\nKapazität" },
+                  { num: "100+", label: "Regionale\nWeine" },
+                  { num: "Privat", label: "Buchbar auf\nAnfrage" }
+                ].map((f, i) => (
+                  <div
+                    key={i}
+                    style={{
+                      paddingRight: "32px",
+                      borderRight: i < 2 ? "1px solid rgba(255,255,255,0.08)" : "none",
+                      paddingLeft: i > 0 ? "32px" : "0"
+                    }}
+                  >
+                    <p
+                      style={{
+                        fontFamily: "var(--font-display)",
+                        fontSize: "36px",
+                        fontWeight: 300,
+                        color: "var(--aged-brass)",
+                        lineHeight: 1,
+                        marginBottom: "8px"
+                      }}
+                    >
+                      {f.num}
+                    </p>
+                    <p
+                      style={{
+                        fontSize: "11px",
+                        fontWeight: 300,
+                        color: "rgba(255,255,255,0.3)",
+                        lineHeight: 1.5,
+                        whiteSpace: "pre-line"
+                      }}
+                    >
+                      {f.label}
+                    </p>
+                  </div>
+                ))}
               </div>
             </div>
-          </motion.div>
-        </div>
+          </div>
+        </RevealSection>
       </section>
 
-      {/* WAS DICH ERWARTET */}
-      <section className="section-padding-lg">
-        <div className="container-max container-padding">
-          <motion.div
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            variants={revealVariants}
-            className="text-center mb-20"
+      {/* UNSERE WEINE */}
+      <section style={{ background: "var(--warm-white)", padding: "96px 80px" }}>
+        <RevealSection>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "flex-end",
+              marginBottom: "64px",
+              gap: "40px"
+            }}
           >
-            <p className="eyebrow-brass mb-4">
-              Was Dich erwartet
-            </p>
-            <h2 className="section-title">
-              Eine andere Welt
-            </h2>
-          </motion.div>
-
-          {/* Features */}
-          <div className="space-y-24">
-            {features.map((feature, index) => (
-              <motion.div
-                key={feature.number}
-                initial="hidden"
-                whileInView="visible"
-                viewport={{ once: true }}
-                variants={revealVariants}
-                transition={{ delay: index * 0.1 }}
-                className={`grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center ${
-                  index % 2 === 1 ? "lg:grid-flow-col-dense" : ""
-                }`}
+            <div>
+              <p className="eyebrow" style={{ marginBottom: "16px" }}>WEINAUSWAHL</p>
+              <h2
+                style={{
+                  fontFamily: "var(--font-display)",
+                  fontSize: "clamp(36px, 5vw, 60px)",
+                  fontWeight: 300,
+                  fontStyle: "italic",
+                  color: "var(--charcoal)",
+                  lineHeight: 0.95
+                }}
               >
-                {/* Image */}
-                <div className={`relative aspect-[4/3] overflow-hidden ${index % 2 === 1 ? "lg:col-start-2" : ""}`}>
-                  <Image
-                    src={feature.image}
-                    alt={feature.title}
-                    fill
-                    className="object-cover transition-transform duration-700 hover:scale-[1.03]"
-                    sizes="(max-width: 1024px) 100vw, 50vw"
-                  />
-                </div>
+                Weine die
+                <br />
+                <strong style={{ fontWeight: 600, fontStyle: "normal" }}>Geschichten erzählen.</strong>
+              </h2>
+            </div>
+            <p
+              style={{
+                fontSize: "13px",
+                fontWeight: 300,
+                color: "var(--stone)",
+                maxWidth: "260px",
+                lineHeight: 1.7,
+                textAlign: "right"
+              }}
+            >
+              Vorwiegend aus der Deutschschweiz und dem Wallis — von Winzern die wir kennen.
+            </p>
+          </div>
 
-                {/* Text */}
-                <div className={index % 2 === 1 ? "lg:col-start-1" : ""}>
-                  <span className="text-6xl opacity-10" style={{ color: "var(--aged-brass)" }}>{feature.number}</span>
-                  <h3 className="section-title mt-4 mb-6">
-                    {feature.title}
-                  </h3>
-                  <p className="body-lg opacity-70">
-                    {feature.description}
+          {/* Wine list */}
+          {[
+            { region: "WALLIS", name: "Fendant du Valais", type: "Weiss · Chasselas", year: "2022", producer: "Domaine Cornulus" },
+            { region: "GRAUBÜNDEN", name: "Malanser Pinot Noir", type: "Rot · Pinot Noir", year: "2021", producer: "Weinbau von Tscharner" },
+            { region: "ZÜRICHSEE", name: "Räuschling", type: "Weiss · Räuschling", year: "2023", producer: "Reblaube Meilen" },
+            { region: "TESSIN", name: "Merlot del Ticino", type: "Rot · Merlot", year: "2020", producer: "Vini Kopp" }
+          ].map((wine, i) => (
+            <div
+              key={i}
+              style={{
+                display: "grid",
+                gridTemplateColumns: "80px 1fr 1fr auto",
+                gap: "24px",
+                alignItems: "center",
+                padding: "24px 0",
+                borderBottom: "1px solid rgba(0,0,0,0.06)"
+              }}
+              onMouseEnter={(e) => (e.currentTarget.style.paddingLeft = "8px")}
+              onMouseLeave={(e) => (e.currentTarget.style.paddingLeft = "0px")}
+            >
+              <span style={{ fontSize: "9px", letterSpacing: "0.15em", color: "var(--stone)" }}>{wine.region}</span>
+              <p
+                style={{
+                  fontFamily: "var(--font-display)",
+                  fontSize: "22px",
+                  fontWeight: 400,
+                  color: "var(--charcoal)"
+                }}
+              >
+                {wine.name}
+              </p>
+              <p style={{ fontSize: "13px", fontWeight: 300, color: "var(--stone)" }}>
+                {wine.type} · {wine.producer}
+              </p>
+              <p style={{ fontSize: "13px", color: "rgba(0,0,0,0.3)", textAlign: "right" }}>{wine.year}</p>
+            </div>
+          ))}
+
+          {/* Reservierung CTA */}
+          <div style={{ display: "flex", justifyContent: "center", marginTop: "64px" }}>
+            <a href="tel:+41335258817" className="btn btn-primary">
+              Abend reservieren — 033 525 88 17
+            </a>
+          </div>
+        </RevealSection>
+      </section>
+
+      {/* ÖFFNUNGSZEITEN */}
+      <section style={{ background: "var(--charcoal)", padding: "96px 80px" }}>
+        <div className="container-max container-padding">
+          <RevealSection>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "flex-end",
+                marginBottom: "64px",
+                flexWrap: "wrap",
+                gap: "32px"
+              }}
+            >
+              <div>
+                <p className="eyebrow" style={{ color: "var(--stone)", marginBottom: "16px" }}>
+                  ÖFFNUNGSZEITEN
+                </p>
+                <h2
+                  style={{
+                    fontFamily: "var(--font-display)",
+                    fontSize: "clamp(36px, 5vw, 56px)",
+                    fontWeight: 300,
+                    fontStyle: "italic",
+                    color: "#FFFFFF",
+                    lineHeight: 0.95
+                  }}
+                >
+                  Wann wir für
+                  <br />
+                  <strong style={{ fontWeight: 600, fontStyle: "normal" }}>Dich da sind.</strong>
+                </h2>
+              </div>
+
+              {/* Today badge */}
+              <div style={{ border: "1px solid rgba(255,255,255,0.12)", padding: "16px 24px" }}>
+                <p style={{ fontSize: "9px", letterSpacing: "0.2em", color: "rgba(255,255,255,0.3)", marginBottom: "6px" }}>
+                  HEUTE
+                </p>
+                <p style={{ fontSize: "16px", fontWeight: 300, color: "#FFFFFF" }}>{todayTime}</p>
+              </div>
+            </div>
+
+            {/* 7 dni grid */}
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns: "repeat(7, 1fr)",
+                borderTop: "1px solid rgba(255,255,255,0.07)",
+                borderLeft: "1px solid rgba(255,255,255,0.07)"
+              }}
+            >
+              {days.map((day, i) => (
+                <div
+                  key={i}
+                  style={{
+                    padding: "28px 16px",
+                    textAlign: "center",
+                    borderRight: "1px solid rgba(255,255,255,0.07)",
+                    borderBottom: "1px solid rgba(255,255,255,0.07)",
+                    background: i === todayIdx ? "rgba(176,141,87,0.07)" : "transparent"
+                  }}
+                >
+                  {i === todayIdx && (
+                    <div style={{ width: "4px", height: "4px", borderRadius: "50%", background: "var(--aged-brass)", margin: "0 auto 10px" }} />
+                  )}
+                  <p
+                    style={{
+                      fontSize: "9px",
+                      fontWeight: 500,
+                      letterSpacing: "0.2em",
+                      textTransform: "uppercase",
+                      color: i === todayIdx ? "var(--aged-brass)" : "rgba(255,255,255,0.25)",
+                      marginBottom: "12px"
+                    }}
+                  >
+                    {day.short}
+                  </p>
+                  <p
+                    style={{
+                      fontSize: "13px",
+                      fontWeight: 300,
+                      color: day.isClosed ? "rgba(255,255,255,0.2)" : i === todayIdx ? "#FFFFFF" : "rgba(255,255,255,0.65)",
+                      fontStyle: day.isClosed ? "italic" : "normal",
+                      lineHeight: 1.4
+                    }}
+                  >
+                    {day.isClosed ? "Ruhetag" : day.time}
                   </p>
                 </div>
-              </motion.div>
-            ))}
-          </div>
+              ))}
+            </div>
+          </RevealSection>
         </div>
       </section>
 
-      {/* APÉRO GALERIE */}
-      <section className="section-padding-lg">
-        <div className="container-max container-padding">
-          <motion.div
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            variants={revealVariants}
-            className="text-center mb-16"
-          >
-            <p className="eyebrow-brass mb-4">
-              Apéro
+      {/* MAPA */}
+      <section style={{ display: "grid", gridTemplateColumns: "1fr 1fr", minHeight: "560px" }}>
+        {/* Lewa — ciemna */}
+        <div
+          style={{
+            background: "var(--charcoal)",
+            padding: "80px",
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center"
+          }}
+        >
+          <RevealSection>
+            <p className="eyebrow" style={{ color: "var(--stone)", marginBottom: "24px" }}>
+              ANFAHRT & ADRESSE
             </p>
-            <h2 className="section-title">
-              Geniessen mit Freunden
-            </h2>
-          </motion.div>
+            <h3
+              style={{
+                fontFamily: "var(--font-display)",
+                fontSize: "clamp(32px, 4vw, 52px)",
+                fontWeight: 300,
+                fontStyle: "italic",
+                color: "#FFFFFF",
+                lineHeight: 1,
+                marginBottom: "40px"
+              }}
+            >
+              Nur per
+              <br />
+              <strong style={{ fontWeight: 600, fontStyle: "normal" }}>Seilbahn.</strong>
+            </h3>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
-            <div className="relative aspect-[4/3] overflow-hidden">
-              <Image
-                src="/images/apero-platter.jpg"
-                alt="Apéroplättli"
-                fill
-                className="object-cover transition-transform duration-700 hover:scale-[1.03]"
-                sizes="(max-width: 768px) 100vw, 50vw"
-              />
-            </div>
-            <div className="relative aspect-[4/3] overflow-hidden">
-              <Image
-                src="/images/wine-selection.jpg"
-                alt="Weinauswahl"
-                fill
-                className="object-cover transition-transform duration-700 hover:scale-[1.03]"
-                sizes="(max-width: 768px) 100vw, 50vw"
-              />
-            </div>
-          </div>
-
-          {/* Apéro items */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-            {aperoItems.map((item, index) => (
-              <motion.div
-                key={item.name}
-                initial="hidden"
-                whileInView="visible"
-                viewport={{ once: true }}
-                variants={revealVariants}
-                transition={{ delay: index * 0.1 }}
-                className="text-center p-6 border border-white/10"
-                style={{ borderColor: "rgba(255,255,255,0.1)" }}
+            {/* Adres */}
+            <div
+              style={{
+                borderLeft: "1px solid rgba(176,141,87,0.4)",
+                paddingLeft: "20px",
+                marginBottom: "40px"
+              }}
+            >
+              <p style={{ fontSize: "9px", letterSpacing: "0.2em", color: "rgba(255,255,255,0.25)", marginBottom: "8px" }}>
+                ADRESSE
+              </p>
+              <p
+                style={{
+                  fontFamily: "var(--font-display)",
+                  fontSize: "28px",
+                  fontWeight: 400,
+                  color: "#FFFFFF",
+                  lineHeight: 1.2
+                }}
               >
-                <Wine size={28} strokeWidth={1} className="mx-auto mb-4" style={{ color: "var(--aged-brass)" }} />
-                <h3 className="body-md font-medium mb-2">{item.name}</h3>
-                <p className="body-sm opacity-50">{item.desc}</p>
-              </motion.div>
+                Zaun 990B
+                <br />
+                3825 Mürren
+              </p>
+            </div>
+
+            {/* 3 kroki */}
+            {[
+              { step: "01", label: "Stechelberg", detail: "Parkplatz & Bushaltestelle" },
+              { step: "02", label: "Luftseilbahn", detail: "4 Minuten · ca. CHF 12.–" },
+              { step: "03", label: "Mürren Dorf", detail: "5 Minuten zu Fuss" }
+            ].map((s, i) => (
+              <div
+                key={i}
+                style={{
+                  display: "flex",
+                  gap: "20px",
+                  padding: "14px 0",
+                  borderBottom: "1px solid rgba(255,255,255,0.05)"
+                }}
+              >
+                <span
+                  style={{
+                    fontFamily: "var(--font-display)",
+                    fontSize: "13px",
+                    fontWeight: 300,
+                    color: "rgba(255,255,255,0.2)",
+                    minWidth: "24px"
+                  }}
+                >
+                  {s.step}
+                </span>
+                <div>
+                  <p style={{ fontSize: "12px", fontWeight: 500, letterSpacing: "0.1em", color: "rgba(255,255,255,0.7)" }}>
+                    {s.label}
+                  </p>
+                  <p style={{ fontSize: "12px", fontWeight: 300, color: "rgba(255,255,255,0.3)" }}>{s.detail}</p>
+                </div>
+              </div>
             ))}
-          </div>
-        </div>
-      </section>
 
-      {/* RESERVATION */}
-      <section id="reservation" className="section-padding-lg" style={{ backgroundColor: "rgba(47,58,52,0.5)" }}>
-        <div className="container-narrow container-padding">
-          <motion.div
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            variants={revealVariants}
-            className="text-center mb-12"
-          >
-            <h2 className="section-title mb-4">
-              Einen Abend reservieren
-            </h2>
-            <p className="body-lg opacity-60">
-              Für Gruppen ab 4 Personen · Privatanlässe möglich
-            </p>
-          </motion.div>
-
-          {/* Form */}
-          <motion.form
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            variants={revealVariants}
-            transition={{ delay: 0.1 }}
-            className="space-y-8 max-w-lg mx-auto"
-            onSubmit={(e) => e.preventDefault()}
-          >
-            <div>
-              <label className="label-brass">Name</label>
-              <input
-                type="text"
-                className="input-underline-dark w-full"
-                placeholder="Dein Name"
-              />
-            </div>
-
-            <div>
-              <label className="label-brass">E-Mail</label>
-              <input
-                type="email"
-                className="input-underline-dark w-full"
-                placeholder="deine@email.ch"
-              />
-            </div>
-
-            <div>
-              <label className="label-brass">Datum & Anzahl Personen</label>
-              <input
-                type="text"
-                className="input-underline-dark w-full"
-                placeholder="z.B. Sa 15. März, 6 Personen"
-              />
-            </div>
-
-            <div>
-              <label className="label-brass">Nachricht</label>
-              <textarea
-                rows={3}
-                className="input-underline-dark w-full resize-none"
-                placeholder="Deine Nachricht an uns..."
-              />
-            </div>
-
-            <button
-              type="submit"
-              className="btn w-full min-h-[44px]"
+            <a
+              href="https://maps.google.com/?q=Murren,Switzerland"
+              target="_blank"
+              rel="noopener noreferrer"
               style={{
-                backgroundColor: "var(--aged-brass)",
-                color: "white"
+                marginTop: "32px",
+                fontFamily: "var(--font-body)",
+                fontSize: "11px",
+                fontWeight: 500,
+                letterSpacing: "0.15em",
+                textTransform: "uppercase",
+                color: "var(--aged-brass)",
+                borderBottom: "1px solid rgba(176,141,87,0.3)",
+                paddingBottom: "2px",
+                display: "inline-block",
+                textDecoration: "none",
+                transition: "border-color 0.3s"
               }}
             >
-              Anfrage senden
-            </button>
-          </motion.form>
-
-          {/* Info */}
-          <div className="mt-12 pt-8 border-t border-white/10 grid grid-cols-2 gap-8 max-w-lg mx-auto" style={{ borderColor: "rgba(255,255,255,0.1)" }}>
-            <div>
-              <p className="body-xs font-medium tracking-[0.2em] uppercase mb-2 opacity-40">Gruppengrösse</p>
-              <p className="body-md">Bis zu 12 Personen</p>
-            </div>
-            <div>
-              <p className="body-xs font-medium tracking-[0.2em] uppercase mb-2 opacity-40">Voranmeldung</p>
-              <p className="body-md">Min. 2 Tage im Voraus</p>
-            </div>
-          </div>
+              Auf Google Maps öffnen →
+            </a>
+          </RevealSection>
         </div>
+
+        {/* Prawa — mapa */}
+        <iframe
+          src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d5490!2d7.8922!3d46.5592!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x478fa57ebb54f74b%3A0x7e3a5a0c2c4b7e8a!2sMurren%2C+Switzerland!5e0!3m2!1sde!2sch!4v1709123456789"
+          style={{
+            width: "100%",
+            height: "100%",
+            border: "none",
+            display: "block",
+            filter: "grayscale(100%) contrast(1.05) brightness(0.9)",
+            minHeight: "400px"
+          }}
+          allowFullScreen
+          loading="lazy"
+          referrerPolicy="no-referrer-when-downgrade"
+          title="Mürren, Switzerland"
+        />
       </section>
 
-      {/* CTA */}
-      <section className="section-padding-md" style={{ backgroundColor: "rgba(47,58,52,0.3)" }}>
-        <div className="container-max container-padding text-center">
-          <h2 className="section-title mb-6">
-            Kombiniere Deinen Abend
-          </h2>
-          <p className="body-lg opacity-60 mb-10">
-            Mit einem Besuch im Dorfladen oder Bistro.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link
-              href="/dorfladen"
-              className="btn min-h-[44px] min-w-[44px]"
-              style={{
-                backgroundColor: "transparent",
-                borderColor: "rgba(255,255,255,0.3)",
-                color: "white"
-              }}
-            >
-              Zum Dorfladen
-              <ArrowRight size={14} />
-            </Link>
-            <Link
-              href="/bistro"
-              className="btn min-h-[44px] min-w-[44px]"
-              style={{
-                backgroundColor: "var(--aged-brass)",
-                color: "white"
-              }}
-            >
-              Zum Bistro
-              <ArrowRight size={14} />
-            </Link>
-          </div>
-        </div>
-      </section>
-    </div>
+      <GlobalFooter />
+    </>
   );
 }

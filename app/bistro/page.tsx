@@ -1,271 +1,599 @@
 "use client";
 
-import { motion } from "framer-motion";
-import Image from "next/image";
-import Link from "next/link";
-import { ArrowRight, Utensils } from "lucide-react";
+import { motion, useInView } from "framer-motion";
+import { useEffect, useRef, useState } from "react";
+import GlobalFooter from "@/components/GlobalFooter";
 
-const menuCategories = [
-  { category: "Vorspeisen", items: [
-    { name: "Bruschetta al Pomodoro", desc: "Tomaten, Basilikum, Knoblauch", price: "CHF 14" },
-    { name: "Burrata", desc: "San Daniele, Feige, Focaccia", price: "CHF 22" },
-  ]},
-  { category: "Hauptgerichte", items: [
-    { name: "Tagesmenu", desc: "Wechselt täglich – frag nach", price: "~" },
-    { name: "Saisonal wechselnd", desc: "Frisch aus dem Laden", price: "~" },
-  ]},
-  { category: "Desserts", items: [
-    { name: "Hausgemacht", desc: "Süsse Versuchungen aus der Küche", price: "~" },
-  ]},
-];
+// Reveal Section Wrapper
+function RevealSection({ children, delay = 0 }: { children: React.ReactNode; delay?: number }) {
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true, margin: "-100px" });
 
-const seasonalDishes = [
-  { title: "Frühling", desc: "Spargel, Rhabarber, frische Kräuter", image: "/images/meal-01.jpg" },
-  { title: "Sommer", desc: "Tomaten, Zucchini, Erdbeeren", image: "/images/meal-02.jpg" },
-  { title: "Herbst & Winter", desc: "Kürbis, Wurzelgemüse, Wild", image: "/images/meal-03.jpg" },
-];
-
-const revealVariants = {
-  hidden: { opacity: 0, y: 30 },
-  visible: { opacity: 1, y: 0 },
-};
+  return (
+    <motion.div
+      ref={ref}
+      initial={{ opacity: 0, y: 30 }}
+      animate={isInView ? { opacity: 1, y: 0 } : {}}
+      transition={{ duration: 0.8, delay }}
+    >
+      {children}
+    </motion.div>
+  );
+}
 
 export default function BistroPage() {
+  const [heroImageY, setHeroImageY] = useState(0);
+  const heroImageRef = useRef<HTMLDivElement>(null);
+
+  // Parallax effect
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollY = window.scrollY;
+      setHeroImageY(scrollY * 0.25);
+    };
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  // Get today's info for Öffnungszeiten
+  const getTodayInfo = () => {
+    const days = [
+      { short: "Mo", isClosed: true },
+      { short: "Di", time: "08:00–18:45" },
+      { short: "Mi", time: "08:00–18:45" },
+      { short: "Do", time: "08:00–18:45" },
+      { short: "Fr", time: "08:00–19:15" },
+      { short: "Sa", time: "08:00–19:15" },
+      { short: "So", time: "08:00–18:45" }
+    ];
+    const todayIdx = new Date().getDay() === 0 ? 6 : new Date().getDay() - 1;
+    return { days, todayIdx, todayTime: days[todayIdx].isClosed ? "Geschlossen" : days[todayIdx].time };
+  };
+
+  const { days, todayIdx, todayTime } = getTodayInfo();
+
   return (
     <>
-      {/* Sub-hero - Dark */}
-      <section className="section-charcoal relative h-[50vh] min-h-[400px] flex items-center justify-center overflow-hidden">
-        <Image
-          src="/images/bistro-hero.jpg"
-          alt="Bistro"
-          fill
-          className="object-cover"
-          priority
-          sizes="100vw"
+      <style>{`
+        @keyframes scrollLine {
+          0% { transform: scaleY(0); opacity: 1 }
+          100% { transform: scaleY(1); opacity: 0 }
+        }
+      `}</style>
+
+      {/* HERO */}
+      <section style={{ height: "92vh", position: "relative", overflow: "hidden" }}>
+        {/* Zdjęcie fullscreen z parallax */}
+        <div
+          ref={heroImageRef}
+          style={{
+            position: "absolute",
+            inset: 0,
+            backgroundImage: "url('/images/bistro-hero.jpg')",
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+            transform: `scale(1.06) translateY(${heroImageY}px)`,
+            willChange: "transform"
+          }}
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-black/40 to-black/70" />
-        <div className="relative z-10 text-center px-6">
-          <motion.h1
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1 }}
-            className="display-hero text-warm-white mb-4"
-          >
-            Bistro
-          </motion.h1>
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1, delay: 0.2 }}
-            className="subheading text-warm-white/80"
-          >
-            Saisonale Küche · Zero Waste · Vom Laden in den Teller
-          </motion.p>
-        </div>
-      </section>
 
-      {/* PHILOSOPHIE - Light */}
-      <section className="section-warm-white section-padding-lg">
-        <div className="container-max container-padding">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-            {/* Image */}
-            <motion.div
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.8 }}
-              className="relative aspect-[4/5] overflow-hidden"
-            >
-              <Image
-                src="/images/bistro-interior.jpg"
-                alt="Bistro Interieur"
-                fill
-                className="object-cover"
-                sizes="(max-width: 1024px) 100vw, 50vw"
-              />
-            </motion.div>
+        {/* Overlay */}
+        <div
+          style={{
+            position: "absolute",
+            inset: 0,
+            background: `linear-gradient(
+              160deg,
+              rgba(30,30,28,0.55) 0%,
+              rgba(30,30,28,0.25) 50%,
+              rgba(30,30,28,0.65) 100%
+            )`
+          }}
+        />
 
-            {/* Text */}
-            <motion.div
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true }}
-              variants={revealVariants}
-            >
-              <p className="eyebrow-brass mb-6">
-                Philosophie
-              </p>
-
-              <blockquote className="section-title italic mb-8" style={{ color: "var(--charcoal)" }}>
-                Vom Laden in den Teller. Zero Waste.
-              </blockquote>
-
-              <p className="body-lg mb-6" style={{ color: "var(--charcoal)", opacity: 0.85 }}>
-                In unserem kleinen Bistro bieten wir eine übersichtliche saisonale Speisekarte an,
-                welche sich am Angebot in unserem Laden anlehnt.
-              </p>
-
-              <p className="body-lg mb-10" style={{ color: "var(--charcoal)", opacity: 0.85 }}>
-                Somit erwartet Dich ein vielseitiges und abwechslungsreiches Angebot.
-                Zusätzlich vermeiden wir auf diesem Weg eine Verschwendung der Lebensmittel.
-              </p>
-
-              <div className="flex items-center gap-4">
-                <Utensils size={20} strokeWidth={1} style={{ color: "var(--aged-brass)" }} />
-                <span className="body-sm opacity-60">Winterkarte 2025/26</span>
-              </div>
-            </motion.div>
-          </div>
-        </div>
-      </section>
-
-      {/* SAISONALE GERICHTE - Image cards */}
-      <section className="section-warm-white section-padding-md">
-        <div className="container-max container-padding">
-          <motion.div
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            variants={revealVariants}
-            className="text-center mb-16"
-          >
-            <p className="eyebrow-brass mb-4">
-              Saisonal
+        {/* Content */}
+        <div style={{ position: "absolute", bottom: "80px", left: "80px", zIndex: 2, maxWidth: "680px" }}>
+          <RevealSection>
+            <p className="eyebrow" style={{ color: "var(--stone)", marginBottom: "20px" }}>
+              SAISONALE KÜCHE · ZERO WASTE · MÜRREN
             </p>
-            <h2 className="section-title" style={{ color: "var(--charcoal)" }}>
-              Was die Saison hergibt
-            </h2>
-          </motion.div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {seasonalDishes.map((dish, index) => (
-              <motion.div
-                key={dish.title}
-                initial="hidden"
-                whileInView="visible"
-                viewport={{ once: true }}
-                variants={revealVariants}
-                transition={{ delay: index * 0.1 }}
-                className="group"
-              >
-                <div className="relative aspect-[4/3] overflow-hidden mb-6">
-                  <Image
-                    src={dish.image}
-                    alt={dish.title}
-                    fill
-                    className="object-cover transition-transform duration-500 group-hover:scale-[1.03]"
-                    sizes="(max-width: 768px) 100vw, 33vw"
-                  />
-                </div>
-                <h3 className="section-title mb-2" style={{ color: "var(--charcoal)" }}>
-                  {dish.title}
-                </h3>
-                <p className="body-md" style={{ color: "var(--charcoal)", opacity: 0.7 }}>
-                  {dish.desc}
-                </p>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* SPEISEKARTE - Light */}
-      <section className="section-warm-white section-padding-lg">
-        <div className="container-narrow container-padding">
-          <motion.div
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            variants={revealVariants}
-            className="text-center mb-16"
-          >
-            <p className="eyebrow-brass mb-4">
-              Speisekarte
+            <h1
+              style={{
+                fontFamily: "var(--font-display)",
+                fontSize: "clamp(64px, 9vw, 120px)",
+                fontWeight: 300,
+                fontStyle: "italic",
+                lineHeight: 0.92,
+                letterSpacing: "-0.02em",
+                color: "#FFFFFF",
+                marginBottom: "8px"
+              }}
+            >
+              Das
+            </h1>
+            <h1
+              style={{
+                fontFamily: "var(--font-display)",
+                fontSize: "clamp(64px, 9vw, 120px)",
+                fontWeight: 600,
+                fontStyle: "normal",
+                lineHeight: 0.92,
+                letterSpacing: "-0.02em",
+                color: "#FFFFFF",
+                marginBottom: "32px"
+              }}
+            >
+              Bistro.
+            </h1>
+            <p
+              style={{
+                fontFamily: "var(--font-body)",
+                fontSize: "16px",
+                fontWeight: 300,
+                color: "rgba(255,255,255,0.6)",
+                lineHeight: 1.7,
+                maxWidth: "440px",
+                marginBottom: "40px"
+              }}
+            >
+              Saisonal, ehrlich, mit Blick auf die Alpen. Mittagstisch und Abendessen im Herzen von Mürren.
             </p>
-            <h2 className="section-title" style={{ color: "var(--charcoal)" }}>
-              Saisonal & Frisch
-            </h2>
-          </motion.div>
+            <a href="#speisekarte" className="btn btn-brass">
+              Speisekarte ansehen
+            </a>
+          </RevealSection>
+        </div>
 
-          {/* Menu Editorial List */}
-          <div>
-            {menuCategories.map((section, sectionIndex) => (
-              <motion.div
-                key={section.category}
-                initial="hidden"
-                whileInView="visible"
-                viewport={{ once: true }}
-                variants={revealVariants}
-                transition={{ delay: sectionIndex * 0.1 }}
-                className="mb-12"
-              >
-                <h3 className="eyebrow mb-6">{section.category}</h3>
-
-                {section.items.map((item, itemIndex) => (
-                  <div
-                    key={item.name}
-                    className="py-5 border-b border-charcoal/10"
-                    style={{ borderColor: "rgba(30,30,28,0.1)" }}
-                  >
-                    <div className="flex justify-between items-start mb-1">
-                      <h4 className="body-md font-medium" style={{ color: "var(--charcoal)" }}>{item.name}</h4>
-                      <span className="price" style={{ color: "var(--aged-brass)" }}>{item.price}</span>
-                    </div>
-                    <p className="body-sm" style={{ color: "var(--charcoal)", opacity: 0.6 }}>{item.desc}</p>
-                  </div>
-                ))}
-              </motion.div>
-            ))}
-          </div>
-
-          <motion.p
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            variants={revealVariants}
-            className="text-center body-sm mt-8"
-            style={{ color: "var(--charcoal)", opacity: 0.6 }}
-          >
-            Preise und Gerichte wechseln saisonal. Erfahre mehr vor Ort.
-          </motion.p>
+        {/* Prawa strona — pionowy label */}
+        <div
+          style={{
+            position: "absolute",
+            right: "40px",
+            top: "50%",
+            transform: "translateY(-50%) rotate(90deg)",
+            transformOrigin: "center",
+            fontFamily: "var(--font-body)",
+            fontSize: "9px",
+            fontWeight: 400,
+            letterSpacing: "0.3em",
+            textTransform: "uppercase",
+            color: "rgba(255,255,255,0.2)",
+            whiteSpace: "nowrap"
+          }}
+        >
+          ALTI METZG · BISTRO
         </div>
       </section>
 
-      {/* CTA - Brass */}
-      <section className="section-padding-md" style={{ backgroundColor: "var(--aged-brass)" }}>
-        <div className="container-narrow container-padding text-center">
-          <motion.h2
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            variants={revealVariants}
-            className="section-title text-white mb-4"
-          >
-            Tisch reservieren
-          </motion.h2>
-          <motion.p
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            variants={revealVariants}
-            transition={{ delay: 0.1 }}
-            className="body-lg text-white/80 mb-10"
-          >
-            Wir freuen uns auf Dich
-          </motion.p>
-          <Link
-            href="/kontakt"
-            className="btn bg-white text-charcoal hover:bg-warm-white min-h-[44px] min-w-[44px]"
+      {/* DIE SPEISEKARTE */}
+      <section style={{ background: "var(--warm-white)", padding: "96px 80px" }}>
+        {/* Header */}
+        <RevealSection>
+          <div
             style={{
-              backgroundColor: "var(--warm-white)",
-              color: "var(--charcoal)"
+              display: "grid",
+              gridTemplateColumns: "1fr 1fr",
+              gap: "80px",
+              marginBottom: "80px",
+              alignItems: "end"
             }}
           >
-            Reservierung
-            <ArrowRight size={14} />
-          </Link>
+            <div>
+              <p className="eyebrow" style={{ marginBottom: "16px" }}>SPEISEKARTE</p>
+              <h2
+                style={{
+                  fontFamily: "var(--font-display)",
+                  fontSize: "clamp(44px, 6vw, 80px)",
+                  fontWeight: 300,
+                  fontStyle: "italic",
+                  color: "var(--charcoal)",
+                  lineHeight: 0.92
+                }}
+              >
+                Saisonal.
+                <br />
+                <strong style={{ fontWeight: 600, fontStyle: "normal" }}>Ehrlich.</strong>
+              </h2>
+            </div>
+            <div>
+              {/* Sezonowa odznaka */}
+              <div
+                style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: "12px",
+                  border: "1px solid rgba(176,141,87,0.3)",
+                  padding: "12px 20px",
+                  marginBottom: "24px"
+                }}
+              >
+                <div style={{ width: "6px", height: "6px", borderRadius: "50%", background: "var(--aged-brass)" }} />
+                <p style={{ fontSize: "10px", letterSpacing: "0.2em", color: "var(--aged-brass)" }}>
+                  WINTERKARTE 2025/26
+                </p>
+              </div>
+              <p
+                style={{
+                  fontSize: "15px",
+                  fontWeight: 300,
+                  color: "rgba(30,30,28,0.55)",
+                  lineHeight: 1.8
+                }}
+              >
+                Unsere Karte wechselt mit den Jahreszeiten.
+                Alles was hier steht, kommt aus der Region
+                oder wächst so nah wie möglich.
+              </p>
+            </div>
+          </div>
+        </RevealSection>
+
+        {/* Menu kategorie */}
+        {[
+          {
+            category: "VORSPEISEN",
+            items: [
+              { name: "Bruschetta al Pomodoro", desc: "Tomaten, Basilikum, Knoblauchöl", price: "CHF 14" },
+              { name: "Burrata", desc: "San Daniele, Feige, Focaccia vom Vortag", price: "CHF 22" },
+              { name: "Kürbissuppe", desc: "Bergkäse, Kürbiskernöl, Sauerrahm", price: "CHF 16" }
+            ]
+          },
+          {
+            category: "HAUPTSPEISEN",
+            items: [
+              { name: "Älplermagronen", desc: "Bergkäse, Röstzwiebeln, Apfelmus", price: "CHF 26" },
+              { name: "Entrecôte vom Simmentaler", desc: "Kartoffelgratin, Salat der Saison", price: "CHF 48" },
+              { name: "Gemüse aus dem Wok", desc: "Saisongemüse, Basmatireis, Erdnusssauce", price: "CHF 24" }
+            ]
+          },
+          {
+            category: "DESSERTS",
+            items: [
+              { name: "Alpenkräuter-Panna Cotta", desc: "Beerenkompott, Minze", price: "CHF 12" },
+              { name: "Käseplatte", desc: "Drei regionale Käse, Honig, Nüsse", price: "CHF 18" }
+            ]
+          }
+        ].map((section, si) => (
+          <div key={si} style={{ marginBottom: "56px" }}>
+            <RevealSection delay={si * 0.1}>
+              {/* Kategorie-Header */}
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "20px",
+                  marginBottom: "8px"
+                }}
+              >
+                <span
+                  style={{
+                    fontSize: "9px",
+                    fontWeight: 500,
+                    letterSpacing: "0.25em",
+                    color: "var(--stone)"
+                  }}
+                >
+                  {section.category}
+                </span>
+                <div style={{ flex: 1, height: "1px", background: "rgba(0,0,0,0.07)" }} />
+              </div>
+
+              {/* Items */}
+              {section.items.map((item, ii) => (
+                <div
+                  key={ii}
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "baseline",
+                    gap: "32px",
+                    padding: "20px 0",
+                    borderBottom: "1px solid rgba(0,0,0,0.05)",
+                    transition: "padding-left 0.3s ease",
+                    cursor: "default"
+                  }}
+                  onMouseEnter={(e) => (e.currentTarget.style.paddingLeft = "8px")}
+                  onMouseLeave={(e) => (e.currentTarget.style.paddingLeft = "0px")}
+                >
+                  <div>
+                    <p
+                      style={{
+                        fontFamily: "var(--font-display)",
+                        fontSize: "22px",
+                        fontWeight: 400,
+                        color: "var(--charcoal)",
+                        marginBottom: "4px"
+                      }}
+                    >
+                      {item.name}
+                    </p>
+                    <p style={{ fontSize: "13px", fontWeight: 300, color: "var(--stone)" }}>{item.desc}</p>
+                  </div>
+                  <p
+                    style={{
+                      fontFamily: "var(--font-body)",
+                      fontSize: "14px",
+                      fontWeight: 400,
+                      color: "var(--charcoal)",
+                      whiteSpace: "nowrap",
+                      flexShrink: 0
+                    }}
+                  >
+                    {item.price}
+                  </p>
+                </div>
+              ))}
+            </RevealSection>
+          </div>
+        ))}
+
+        {/* Rezerwacja CTA */}
+        <RevealSection delay={0.4}>
+          <div
+            style={{
+              background: "var(--charcoal)",
+              padding: "48px 64px",
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              marginTop: "64px",
+              gap: "40px"
+            }}
+          >
+            <div>
+              <p
+                style={{
+                  fontFamily: "var(--font-display)",
+                  fontSize: "28px",
+                  fontWeight: 300,
+                  fontStyle: "italic",
+                  color: "#FFFFFF",
+                  lineHeight: 1.2
+                }}
+              >
+                Reserviert Euren Tisch —{" "}
+                <strong style={{ fontWeight: 600, fontStyle: "normal" }}>wir freuen uns.</strong>
+              </p>
+            </div>
+            <a href="tel:+41335258817" className="btn btn-brass" style={{ flexShrink: 0 }}>
+              033 525 88 17
+            </a>
+          </div>
+        </RevealSection>
+      </section>
+
+      {/* ÖFFNUNGSZEITEN */}
+      <section style={{ background: "var(--charcoal)", padding: "96px 80px" }}>
+        <div className="container-max container-padding">
+          <RevealSection>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "flex-end",
+                marginBottom: "64px",
+                flexWrap: "wrap",
+                gap: "32px"
+              }}
+            >
+              <div>
+                <p className="eyebrow" style={{ color: "var(--stone)", marginBottom: "16px" }}>
+                  ÖFFNUNGSZEITEN
+                </p>
+                <h2
+                  style={{
+                    fontFamily: "var(--font-display)",
+                    fontSize: "clamp(36px, 5vw, 56px)",
+                    fontWeight: 300,
+                    fontStyle: "italic",
+                    color: "#FFFFFF",
+                    lineHeight: 0.95
+                  }}
+                >
+                  Wann wir für
+                  <br />
+                  <strong style={{ fontWeight: 600, fontStyle: "normal" }}>Dich da sind.</strong>
+                </h2>
+              </div>
+
+              {/* Today badge */}
+              <div style={{ border: "1px solid rgba(255,255,255,0.12)", padding: "16px 24px" }}>
+                <p style={{ fontSize: "9px", letterSpacing: "0.2em", color: "rgba(255,255,255,0.3)", marginBottom: "6px" }}>
+                  HEUTE
+                </p>
+                <p style={{ fontSize: "16px", fontWeight: 300, color: "#FFFFFF" }}>{todayTime}</p>
+              </div>
+            </div>
+
+            {/* 7 dni grid */}
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns: "repeat(7, 1fr)",
+                borderTop: "1px solid rgba(255,255,255,0.07)",
+                borderLeft: "1px solid rgba(255,255,255,0.07)"
+              }}
+            >
+              {days.map((day, i) => (
+                <div
+                  key={i}
+                  style={{
+                    padding: "28px 16px",
+                    textAlign: "center",
+                    borderRight: "1px solid rgba(255,255,255,0.07)",
+                    borderBottom: "1px solid rgba(255,255,255,0.07)",
+                    background: i === todayIdx ? "rgba(176,141,87,0.07)" : "transparent"
+                  }}
+                >
+                  {i === todayIdx && (
+                    <div style={{ width: "4px", height: "4px", borderRadius: "50%", background: "var(--aged-brass)", margin: "0 auto 10px" }} />
+                  )}
+                  <p
+                    style={{
+                      fontSize: "9px",
+                      fontWeight: 500,
+                      letterSpacing: "0.2em",
+                      textTransform: "uppercase",
+                      color: i === todayIdx ? "var(--aged-brass)" : "rgba(255,255,255,0.25)",
+                      marginBottom: "12px"
+                    }}
+                  >
+                    {day.short}
+                  </p>
+                  <p
+                    style={{
+                      fontSize: "13px",
+                      fontWeight: 300,
+                      color: day.isClosed ? "rgba(255,255,255,0.2)" : i === todayIdx ? "#FFFFFF" : "rgba(255,255,255,0.65)",
+                      fontStyle: day.isClosed ? "italic" : "normal",
+                      lineHeight: 1.4
+                    }}
+                  >
+                    {day.isClosed ? "Ruhetag" : day.time}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </RevealSection>
         </div>
       </section>
+
+      {/* MAPA */}
+      <section style={{ display: "grid", gridTemplateColumns: "1fr 1fr", minHeight: "560px" }}>
+        {/* Lewa — ciemna */}
+        <div
+          style={{
+            background: "var(--charcoal)",
+            padding: "80px",
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center"
+          }}
+        >
+          <RevealSection>
+            <p className="eyebrow" style={{ color: "var(--stone)", marginBottom: "24px" }}>
+              ANFAHRT & ADRESSE
+            </p>
+            <h3
+              style={{
+                fontFamily: "var(--font-display)",
+                fontSize: "clamp(32px, 4vw, 52px)",
+                fontWeight: 300,
+                fontStyle: "italic",
+                color: "#FFFFFF",
+                lineHeight: 1,
+                marginBottom: "40px"
+              }}
+            >
+              Nur per
+              <br />
+              <strong style={{ fontWeight: 600, fontStyle: "normal" }}>Seilbahn.</strong>
+            </h3>
+
+            {/* Adres */}
+            <div
+              style={{
+                borderLeft: "1px solid rgba(176,141,87,0.4)",
+                paddingLeft: "20px",
+                marginBottom: "40px"
+              }}
+            >
+              <p style={{ fontSize: "9px", letterSpacing: "0.2em", color: "rgba(255,255,255,0.25)", marginBottom: "8px" }}>
+                ADRESSE
+              </p>
+              <p
+                style={{
+                  fontFamily: "var(--font-display)",
+                  fontSize: "28px",
+                  fontWeight: 400,
+                  color: "#FFFFFF",
+                  lineHeight: 1.2
+                }}
+              >
+                Zaun 990B
+                <br />
+                3825 Mürren
+              </p>
+            </div>
+
+            {/* 3 kroki */}
+            {[
+              { step: "01", label: "Stechelberg", detail: "Parkplatz & Bushaltestelle" },
+              { step: "02", label: "Luftseilbahn", detail: "4 Minuten · ca. CHF 12.–" },
+              { step: "03", label: "Mürren Dorf", detail: "5 Minuten zu Fuss" }
+            ].map((s, i) => (
+              <div
+                key={i}
+                style={{
+                  display: "flex",
+                  gap: "20px",
+                  padding: "14px 0",
+                  borderBottom: "1px solid rgba(255,255,255,0.05)"
+                }}
+              >
+                <span
+                  style={{
+                    fontFamily: "var(--font-display)",
+                    fontSize: "13px",
+                    fontWeight: 300,
+                    color: "rgba(255,255,255,0.2)",
+                    minWidth: "24px"
+                  }}
+                >
+                  {s.step}
+                </span>
+                <div>
+                  <p style={{ fontSize: "12px", fontWeight: 500, letterSpacing: "0.1em", color: "rgba(255,255,255,0.7)" }}>
+                    {s.label}
+                  </p>
+                  <p style={{ fontSize: "12px", fontWeight: 300, color: "rgba(255,255,255,0.3)" }}>{s.detail}</p>
+                </div>
+              </div>
+            ))}
+
+            <a
+              href="https://maps.google.com/?q=Murren,Switzerland"
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{
+                marginTop: "32px",
+                fontFamily: "var(--font-body)",
+                fontSize: "11px",
+                fontWeight: 500,
+                letterSpacing: "0.15em",
+                textTransform: "uppercase",
+                color: "var(--aged-brass)",
+                borderBottom: "1px solid rgba(176,141,87,0.3)",
+                paddingBottom: "2px",
+                display: "inline-block",
+                textDecoration: "none",
+                transition: "border-color 0.3s"
+              }}
+            >
+              Auf Google Maps öffnen →
+            </a>
+          </RevealSection>
+        </div>
+
+        {/* Prawa — mapa */}
+        <iframe
+          src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d5490!2d7.8922!3d46.5592!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x478fa57ebb54f74b%3A0x7e3a5a0c2c4b7e8a!2sMurren%2C+Switzerland!5e0!3m2!1sde!2sch!4v1709123456789"
+          style={{
+            width: "100%",
+            height: "100%",
+            border: "none",
+            display: "block",
+            filter: "grayscale(100%) contrast(1.05) brightness(0.9)",
+            minHeight: "400px"
+          }}
+          allowFullScreen
+          loading="lazy"
+          referrerPolicy="no-referrer-when-downgrade"
+          title="Mürren, Switzerland"
+        />
+      </section>
+
+      <GlobalFooter />
     </>
   );
 }
