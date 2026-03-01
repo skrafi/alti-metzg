@@ -64,7 +64,7 @@ export default function ContactForm() {
     >
       {/* Name */}
       <div>
-        <label htmlFor="name" className="label-copper">Name</label>
+        <label htmlFor="name" className="label-brass">Name</label>
         <input
           {...register("name")}
           type="text"
@@ -77,7 +77,7 @@ export default function ContactForm() {
 
       {/* Email */}
       <div>
-        <label htmlFor="email" className="label-copper">E-Mail</label>
+        <label htmlFor="email" className="label-brass">E-Mail</label>
         <input
           {...register("email")}
           type="email"
@@ -90,7 +90,7 @@ export default function ContactForm() {
 
       {/* Message */}
       <div>
-        <label htmlFor="message" className="label-copper">Nachricht</label>
+        <label htmlFor="message" className="label-brass">Nachricht</label>
         <textarea
           {...register("message")}
           id="message"
@@ -105,7 +105,7 @@ export default function ContactForm() {
       <button
         type="submit"
         disabled={isSubmitting}
-        className="btn btn-primary w-full justify-center disabled:opacity-50"
+        className="btn btn-primary w-full justify-center disabled:opacity-50 min-h-[44px]"
       >
         {isSubmitting ? "Wird gesendet..." : (
           <>

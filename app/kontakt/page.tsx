@@ -218,7 +218,7 @@ export default function KontaktPage() {
             style={{ borderColor: "rgba(30,30,28,0.1)" }}
           >
             <iframe
-              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2723.1!2d7.9!3d46.6!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zNDbCsDM2JzAwLjAiTiA3wrA1NCcwMC4wIkU!5e0!3m2!1sde!2sch!4v1234567890"
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2723.1474!2d7.9073!3d46.5585!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47859071640616b3%3A0xc5f3d7f0e3b7c5a5!2sZaun%20990B%2C%203825%20M%C3%BCrren%2C%20Switzerland!5e0!3m2!1sen!2sus!4v1700000000000"
               width="100%"
               height="100%"
               style={{ border: 0 }}

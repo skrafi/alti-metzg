@@ -255,7 +255,7 @@ export default function BistroPage() {
           </motion.p>
           <Link
             href="/kontakt"
-            className="btn bg-white text-charcoal hover:bg-warm-white"
+            className="btn bg-white text-charcoal hover:bg-warm-white min-h-[44px] min-w-[44px]"
             style={{
               backgroundColor: "var(--warm-white)",
               color: "var(--charcoal)"

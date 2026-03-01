@@ -1,0 +1,393 @@
+{
+  "timestamp": "2026-03-01T14:45:23.167Z",
+  "url": "http://localhost:3000",
+  "score": 30,
+  "status": "FAIL",
+  "breakdown": {
+    "spacing": 66,
+    "animations": 77,
+    "contrast": 78,
+    "typography": 100,
+    "responsive": 50
+  },
+  "issues": [
+    {
+      "id": "SP-01",
+      "severity": "critical",
+      "category": "spacing",
+      "label": "Inconsistent section padding",
+      "detail": "relative h-screen min-h-[750px: 0px top",
+      "fix": "Use py-20 (80px) or py-32 (128px) consistently on all sections"
+    },
+    {
+      "id": "CC-01",
+      "severity": "critical",
+      "category": "contrast",
+      "label": "1 text contrast failures",
+      "detail": "A \"Tisch reservieren\": 1.00:1 (need 4.5:1)",
+      "fix": "Increase text/background color contrast to meet WCAG AA (4.5:1 normal, 3:1 large text)"
+    },
+    {
+      "id": "RE-03",
+      "severity": "high",
+      "category": "responsive",
+      "label": "16 touch targets too small",
+      "detail": "A \"AMAlti Metzg\", BUTTON \"\", A \"Zum Dorfladen\"",
+      "fix": "Add min-height: 44px; min-width: 44px to all interactive elements"
+    },
+    {
+      "id": "GD-01",
+      "severity": "critical",
+      "category": "spacing",
+      "label": "41 console error(s)",
+      "detail": "Failed to load resource: the server responded with a status of 400 (Bad Request) | Failed to load resource: the server responded with a status of 400 (Bad Request)",
+      "fix": "Fix JavaScript errors before deploying"
+    },
+    {
+      "id": "SP-01",
+      "severity": "critical",
+      "category": "spacing",
+      "label": "Inconsistent section padding",
+      "detail": "relative h-screen min-h-[750px: 0px top",
+      "fix": "Use py-20 (80px) or py-32 (128px) consistently on all sections"
+    },
+    {
+      "id": "SP-01",
+      "severity": "critical",
+      "category": "spacing",
+      "label": "Inconsistent section padding",
+      "detail": "relative h-screen min-h-[750px: 0px top, about: 192px top, section-charcoal section-paddi: 192px top, section-forest section-padding: 192px top, section-warm-white section-pad: 192px top, section-stone section-padding-: 192px top",
+      "fix": "Use py-20 (80px) or py-32 (128px) consistently on all sections"
+    },
+    {
+      "id": "SP-01",
+      "severity": "critical",
+      "category": "spacing",
+      "label": "Inconsistent section padding",
+      "detail": "relative h-screen min-h-[750px: 0px top, about: 192px top, section-charcoal section-paddi: 192px top, section-forest section-padding: 192px top, section-warm-white section-pad: 192px top, section-stone section-padding-: 192px top",
+      "fix": "Use py-20 (80px) or py-32 (128px) consistently on all sections"
+    },
+    {
+      "id": "SP-01",
+      "severity": "critical",
+      "category": "spacing",
+      "label": "Inconsistent section padding",
+      "detail": "section-charcoal relative h-[5: 0px top",
+      "fix": "Use py-20 (80px) or py-32 (128px) consistently on all sections"
+    },
+    {
+      "id": "RE-03",
+      "severity": "high",
+      "category": "responsive",
+      "label": "13 touch targets too small",
+      "detail": "A \"AMAlti Metzg\", BUTTON \"\", A \"Reservierung\"",
+      "fix": "Add min-height: 44px; min-width: 44px to all interactive elements"
+    },
+    {
+      "id": "SP-01",
+      "severity": "critical",
+      "category": "spacing",
+      "label": "Inconsistent section padding",
+      "detail": "section-charcoal relative h-[5: 0px top",
+      "fix": "Use py-20 (80px) or py-32 (128px) consistently on all sections"
+    },
+    {
+      "id": "AN-06",
+      "severity": "medium",
+      "category": "animations",
+      "label": "Navbar does not change on scroll",
+      "fix": "Add scroll listener: toggle .scrolled class with frosted glass background"
+    },
+    {
+      "id": "SP-01",
+      "severity": "critical",
+      "category": "spacing",
+      "label": "Inconsistent section padding",
+      "detail": "section-charcoal relative h-[5: 0px top, section-warm-white section-pad: 192px top, section-warm-white section-pad: 192px top",
+      "fix": "Use py-20 (80px) or py-32 (128px) consistently on all sections"
+    },
+    {
+      "id": "AN-06",
+      "severity": "medium",
+      "category": "animations",
+      "label": "Navbar does not change on scroll",
+      "fix": "Add scroll listener: toggle .scrolled class with frosted glass background"
+    },
+    {
+      "id": "SP-01",
+      "severity": "critical",
+      "category": "spacing",
+      "label": "Inconsistent section padding",
+      "detail": "section-charcoal relative h-[5: 0px top, section-warm-white section-pad: 192px top, section-warm-white section-pad: 192px top",
+      "fix": "Use py-20 (80px) or py-32 (128px) consistently on all sections"
+    },
+    {
+      "id": "AN-06",
+      "severity": "medium",
+      "category": "animations",
+      "label": "Navbar does not change on scroll",
+      "fix": "Add scroll listener: toggle .scrolled class with frosted glass background"
+    },
+    {
+      "id": "SP-01",
+      "severity": "critical",
+      "category": "spacing",
+      "label": "Inconsistent section padding",
+      "detail": "relative h-[60vh] min-h-[500px: 0px top, section-warm-white: 0px top",
+      "fix": "Use py-20 (80px) or py-32 (128px) consistently on all sections"
+    },
+    {
+      "id": "RE-03",
+      "severity": "high",
+      "category": "responsive",
+      "label": "14 touch targets too small",
+      "detail": "A \"AMAlti Metzg\", BUTTON \"\", A \"Zum Bistro\"",
+      "fix": "Add min-height: 44px; min-width: 44px to all interactive elements"
+    },
+    {
+      "id": "SP-01",
+      "severity": "critical",
+      "category": "spacing",
+      "label": "Inconsistent section padding",
+      "detail": "relative h-[60vh] min-h-[500px: 0px top, section-warm-white: 0px top",
+      "fix": "Use py-20 (80px) or py-32 (128px) consistently on all sections"
+    },
+    {
+      "id": "AN-06",
+      "severity": "medium",
+      "category": "animations",
+      "label": "Navbar does not change on scroll",
+      "fix": "Add scroll listener: toggle .scrolled class with frosted glass background"
+    },
+    {
+      "id": "SP-01",
+      "severity": "critical",
+      "category": "spacing",
+      "label": "Inconsistent section padding",
+      "detail": "relative h-[60vh] min-h-[500px: 0px top, section-warm-white: 0px top, section-charcoal section-paddi: 192px top",
+      "fix": "Use py-20 (80px) or py-32 (128px) consistently on all sections"
+    },
+    {
+      "id": "AN-06",
+      "severity": "medium",
+      "category": "animations",
+      "label": "Navbar does not change on scroll",
+      "fix": "Add scroll listener: toggle .scrolled class with frosted glass background"
+    },
+    {
+      "id": "SP-01",
+      "severity": "critical",
+      "category": "spacing",
+      "label": "Inconsistent section padding",
+      "detail": "relative h-[60vh] min-h-[500px: 0px top, section-warm-white: 0px top, section-charcoal section-paddi: 192px top",
+      "fix": "Use py-20 (80px) or py-32 (128px) consistently on all sections"
+    },
+    {
+      "id": "AN-06",
+      "severity": "medium",
+      "category": "animations",
+      "label": "Navbar does not change on scroll",
+      "fix": "Add scroll listener: toggle .scrolled class with frosted glass background"
+    },
+    {
+      "id": "SP-01",
+      "severity": "critical",
+      "category": "spacing",
+      "label": "Inconsistent section padding",
+      "detail": "relative h-screen min-h-[700px: 0px top",
+      "fix": "Use py-20 (80px) or py-32 (128px) consistently on all sections"
+    },
+    {
+      "id": "CC-01",
+      "severity": "critical",
+      "category": "contrast",
+      "label": "1 text contrast failures",
+      "detail": "A \"Voranmeldung & Anfrage\": 3.09:1 (need 4.5:1)",
+      "fix": "Increase text/background color contrast to meet WCAG AA (4.5:1 normal, 3:1 large text)"
+    },
+    {
+      "id": "RE-03",
+      "severity": "high",
+      "category": "responsive",
+      "label": "16 touch targets too small",
+      "detail": "A \"AMAlti Metzg\", BUTTON \"\", A \"Voranmeldung & Anfra\"",
+      "fix": "Add min-height: 44px; min-width: 44px to all interactive elements"
+    },
+    {
+      "id": "SP-01",
+      "severity": "critical",
+      "category": "spacing",
+      "label": "Inconsistent section padding",
+      "detail": "relative h-screen min-h-[700px: 0px top",
+      "fix": "Use py-20 (80px) or py-32 (128px) consistently on all sections"
+    },
+    {
+      "id": "AN-06",
+      "severity": "medium",
+      "category": "animations",
+      "label": "Navbar does not change on scroll",
+      "fix": "Add scroll listener: toggle .scrolled class with frosted glass background"
+    },
+    {
+      "id": "CC-01",
+      "severity": "critical",
+      "category": "contrast",
+      "label": "1 text contrast failures",
+      "detail": "A \"Voranmeldung & Anfrage\": 3.09:1 (need 4.5:1)",
+      "fix": "Increase text/background color contrast to meet WCAG AA (4.5:1 normal, 3:1 large text)"
+    },
+    {
+      "id": "SP-01",
+      "severity": "critical",
+      "category": "spacing",
+      "label": "Inconsistent section padding",
+      "detail": "relative h-screen min-h-[700px: 0px top, section-padding-lg relative ov: 192px top, section-padding-lg: 192px top, section-padding-lg: 192px top, reservation: 192px top",
+      "fix": "Use py-20 (80px) or py-32 (128px) consistently on all sections"
+    },
+    {
+      "id": "AN-06",
+      "severity": "medium",
+      "category": "animations",
+      "label": "Navbar does not change on scroll",
+      "fix": "Add scroll listener: toggle .scrolled class with frosted glass background"
+    },
+    {
+      "id": "CC-01",
+      "severity": "critical",
+      "category": "contrast",
+      "label": "1 text contrast failures",
+      "detail": "A \"Voranmeldung & Anfrage\": 3.09:1 (need 4.5:1)",
+      "fix": "Increase text/background color contrast to meet WCAG AA (4.5:1 normal, 3:1 large text)"
+    },
+    {
+      "id": "SP-01",
+      "severity": "critical",
+      "category": "spacing",
+      "label": "Inconsistent section padding",
+      "detail": "relative h-screen min-h-[700px: 0px top, section-padding-lg relative ov: 192px top, section-padding-lg: 192px top, section-padding-lg: 192px top, reservation: 192px top",
+      "fix": "Use py-20 (80px) or py-32 (128px) consistently on all sections"
+    },
+    {
+      "id": "AN-06",
+      "severity": "medium",
+      "category": "animations",
+      "label": "Navbar does not change on scroll",
+      "fix": "Add scroll listener: toggle .scrolled class with frosted glass background"
+    },
+    {
+      "id": "CC-01",
+      "severity": "critical",
+      "category": "contrast",
+      "label": "1 text contrast failures",
+      "detail": "A \"Voranmeldung & Anfrage\": 3.09:1 (need 4.5:1)",
+      "fix": "Increase text/background color contrast to meet WCAG AA (4.5:1 normal, 3:1 large text)"
+    },
+    {
+      "id": "SP-01",
+      "severity": "critical",
+      "category": "spacing",
+      "label": "Inconsistent section padding",
+      "detail": "section-warm-white: 0px top",
+      "fix": "Use py-20 (80px) or py-32 (128px) consistently on all sections"
+    },
+    {
+      "id": "RE-03",
+      "severity": "high",
+      "category": "responsive",
+      "label": "14 touch targets too small",
+      "detail": "A \"AMAlti Metzg\", BUTTON \"\", A \"Kontakt\"",
+      "fix": "Add min-height: 44px; min-width: 44px to all interactive elements"
+    },
+    {
+      "id": "SP-01",
+      "severity": "critical",
+      "category": "spacing",
+      "label": "Inconsistent section padding",
+      "detail": "section-warm-white: 0px top",
+      "fix": "Use py-20 (80px) or py-32 (128px) consistently on all sections"
+    },
+    {
+      "id": "AN-06",
+      "severity": "medium",
+      "category": "animations",
+      "label": "Navbar does not change on scroll",
+      "fix": "Add scroll listener: toggle .scrolled class with frosted glass background"
+    },
+    {
+      "id": "SP-01",
+      "severity": "critical",
+      "category": "spacing",
+      "label": "Inconsistent section padding",
+      "detail": "section-warm-white: 0px top, section-warm-white section-pad: 192px top, section-charcoal section-paddi: 192px top",
+      "fix": "Use py-20 (80px) or py-32 (128px) consistently on all sections"
+    },
+    {
+      "id": "AN-06",
+      "severity": "medium",
+      "category": "animations",
+      "label": "Navbar does not change on scroll",
+      "fix": "Add scroll listener: toggle .scrolled class with frosted glass background"
+    },
+    {
+      "id": "SP-01",
+      "severity": "critical",
+      "category": "spacing",
+      "label": "Inconsistent section padding",
+      "detail": "section-warm-white: 0px top, section-warm-white section-pad: 192px top, section-charcoal section-paddi: 192px top",
+      "fix": "Use py-20 (80px) or py-32 (128px) consistently on all sections"
+    },
+    {
+      "id": "AN-06",
+      "severity": "medium",
+      "category": "animations",
+      "label": "Navbar does not change on scroll",
+      "fix": "Add scroll listener: toggle .scrolled class with frosted glass background"
+    },
+    {
+      "id": "GD-03",
+      "severity": "critical",
+      "category": "spacing",
+      "label": "Page failed to load",
+      "detail": "page.goto: Timeout 15000ms exceeded.\nCall log:\n  - navigating to \"http://localhost:3000/kontakt\", waiting until \"networkidle\"\n",
+      "fix": "Check dev server is running"
+    },
+    {
+      "id": "AN-06",
+      "severity": "medium",
+      "category": "animations",
+      "label": "Navbar does not change on scroll",
+      "fix": "Add scroll listener: toggle .scrolled class with frosted glass background"
+    },
+    {
+      "id": "SP-01",
+      "severity": "critical",
+      "category": "spacing",
+      "label": "Inconsistent section padding",
+      "detail": "section-warm-white section-pad: 192px top, section-warm-white section-pad: 192px top",
+      "fix": "Use py-20 (80px) or py-32 (128px) consistently on all sections"
+    },
+    {
+      "id": "AN-06",
+      "severity": "medium",
+      "category": "animations",
+      "label": "Navbar does not change on scroll",
+      "fix": "Add scroll listener: toggle .scrolled class with frosted glass background"
+    },
+    {
+      "id": "SP-01",
+      "severity": "critical",
+      "category": "spacing",
+      "label": "Inconsistent section padding",
+      "detail": "section-warm-white section-pad: 192px top, section-warm-white section-pad: 192px top",
+      "fix": "Use py-20 (80px) or py-32 (128px) consistently on all sections"
+    },
+    {
+      "id": "AN-06",
+      "severity": "medium",
+      "category": "animations",
+      "label": "Navbar does not change on scroll",
+      "fix": "Add scroll listener: toggle .scrolled class with frosted glass background"
+    }
+  ],
+  "passed": 165
+}

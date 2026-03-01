@@ -1,0 +1,692 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>QA Report — 01/03/2026</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #0f0f0f; color: #e5e5e5; min-height: 100vh; }
+  .header { background: #1a1a1a; border-bottom: 1px solid #333; padding: 32px 48px; display: flex; align-items: center; justify-content: space-between; }
+  .header-title { font-size: 13px; font-weight: 600; letter-spacing: 0.15em; text-transform: uppercase; opacity: 0.5; margin-bottom: 6px; }
+  .header-url { font-size: 20px; font-weight: 600; color: #fff; }
+  .score-badge { text-align: center; }
+  .score-number { font-size: 72px; font-weight: 800; color: #ef4444; line-height: 1; }
+  .score-status { font-size: 13px; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; color: #ef4444; margin-top: 4px; }
+  .main { padding: 32px 48px; max-width: 1200px; margin: 0 auto; }
+  .breakdown { display: grid; grid-template-columns: repeat(5, 1fr); gap: 16px; margin-bottom: 40px; }
+  .breakdown-card { background: #1a1a1a; border: 1px solid #2a2a2a; border-radius: 8px; padding: 20px; text-align: center; }
+  .breakdown-label { font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; opacity: 0.5; margin-bottom: 8px; }
+  .breakdown-score { font-size: 36px; font-weight: 700; }
+  .issues-section { margin-bottom: 40px; }
+  .section-title { font-size: 11px; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase; opacity: 0.5; margin-bottom: 16px; display: flex; align-items: center; gap: 10px; }
+  .section-title::after { content: ''; flex: 1; height: 1px; background: #2a2a2a; }
+  .issue { background: #1a1a1a; border: 1px solid #2a2a2a; border-left: 3px solid; border-radius: 6px; padding: 16px 20px; margin-bottom: 8px; }
+  .issue.critical { border-left-color: #ef4444; }
+  .issue.high { border-left-color: #f59e0b; }
+  .issue.medium { border-left-color: #3b82f6; }
+  .issue.low { border-left-color: #6b7280; }
+  .issue-header { display: flex; align-items: center; gap: 12px; margin-bottom: 4px; }
+  .issue-id { font-size: 10px; font-weight: 700; letter-spacing: 0.1em; background: #2a2a2a; padding: 2px 8px; border-radius: 3px; font-family: monospace; }
+  .issue-label { font-size: 14px; font-weight: 600; color: #fff; }
+  .issue-detail { font-size: 12px; opacity: 0.6; margin-top: 4px; font-family: monospace; }
+  .issue-fix { font-size: 12px; color: #86efac; margin-top: 8px; padding-top: 8px; border-top: 1px solid #2a2a2a; }
+  .issue-fix::before { content: '→ Fix: '; font-weight: 600; }
+  .passed-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
+  .passed-item { background: rgba(34,197,94,0.08); border: 1px solid rgba(34,197,94,0.2); border-radius: 4px; padding: 8px 14px; font-size: 12px; color: #86efac; display: flex; align-items: center; gap: 8px; }
+  .passed-item::before { content: '✓'; font-weight: 700; }
+  .screenshots { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; }
+  .screenshot-card { background: #1a1a1a; border: 1px solid #2a2a2a; border-radius: 8px; overflow: hidden; }
+  .screenshot-label { padding: 10px 14px; font-size: 11px; opacity: 0.6; font-family: monospace; }
+  .screenshot-card img { width: 100%; display: block; }
+  .footer { text-align: center; padding: 32px; font-size: 11px; opacity: 0.3; border-top: 1px solid #2a2a2a; margin-top: 40px; }
+  .tag { display: inline-block; font-size: 10px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; padding: 2px 8px; border-radius: 3px; }
+  .tag-critical { background: rgba(239,68,68,0.15); color: #ef4444; }
+  .tag-high { background: rgba(245,158,11,0.15); color: #f59e0b; }
+  .tag-medium { background: rgba(59,130,246,0.15); color: #60a5fa; }
+</style>
+</head>
+<body>
+<div class="header">
+  <div>
+    <div class="header-title">Visual QA Report · 01/03/2026, 15:45:23</div>
+    <div class="header-url">http://localhost:3000</div>
+  </div>
+  <div class="score-badge">
+    <div class="score-number">30</div>
+    <div class="score-status">❌ FAIL</div>
+  </div>
+</div>
+
+<div class="main">
+  <!-- Breakdown -->
+  <div class="breakdown">
+    
+      <div class="breakdown-card">
+        <div class="breakdown-label">spacing</div>
+        <div class="breakdown-score" style="color: #f59e0b">66</div>
+      </div>
+    
+      <div class="breakdown-card">
+        <div class="breakdown-label">animations</div>
+        <div class="breakdown-score" style="color: #f59e0b">77</div>
+      </div>
+    
+      <div class="breakdown-card">
+        <div class="breakdown-label">contrast</div>
+        <div class="breakdown-score" style="color: #f59e0b">78</div>
+      </div>
+    
+      <div class="breakdown-card">
+        <div class="breakdown-label">typography</div>
+        <div class="breakdown-score" style="color: #22c55e">100</div>
+      </div>
+    
+      <div class="breakdown-card">
+        <div class="breakdown-label">responsive</div>
+        <div class="breakdown-score" style="color: #ef4444">50</div>
+      </div>
+    
+  </div>
+
+  <!-- Issues by severity -->
+  
+  <div class="issues-section">
+    <div class="section-title"><span class="tag tag-critical">critical</span> 29 issues</div>
+    
+    <div class="issue critical">
+      <div class="issue-header">
+        <span class="issue-id">SP-01</span>
+        <span class="issue-label">Inconsistent section padding</span>
+      </div>
+      <div class="issue-detail">relative h-screen min-h-[750px: 0px top</div>
+      <div class="issue-fix">Use py-20 (80px) or py-32 (128px) consistently on all sections</div>
+    </div>
+    
+    <div class="issue critical">
+      <div class="issue-header">
+        <span class="issue-id">CC-01</span>
+        <span class="issue-label">1 text contrast failures</span>
+      </div>
+      <div class="issue-detail">A "Tisch reservieren": 1.00:1 (need 4.5:1)</div>
+      <div class="issue-fix">Increase text/background color contrast to meet WCAG AA (4.5:1 normal, 3:1 large text)</div>
+    </div>
+    
+    <div class="issue critical">
+      <div class="issue-header">
+        <span class="issue-id">GD-01</span>
+        <span class="issue-label">41 console error(s)</span>
+      </div>
+      <div class="issue-detail">Failed to load resource: the server responded with a status of 400 (Bad Request) | Failed to load resource: the server responded with a status of 400 (Bad Request)</div>
+      <div class="issue-fix">Fix JavaScript errors before deploying</div>
+    </div>
+    
+    <div class="issue critical">
+      <div class="issue-header">
+        <span class="issue-id">SP-01</span>
+        <span class="issue-label">Inconsistent section padding</span>
+      </div>
+      <div class="issue-detail">relative h-screen min-h-[750px: 0px top</div>
+      <div class="issue-fix">Use py-20 (80px) or py-32 (128px) consistently on all sections</div>
+    </div>
+    
+    <div class="issue critical">
+      <div class="issue-header">
+        <span class="issue-id">SP-01</span>
+        <span class="issue-label">Inconsistent section padding</span>
+      </div>
+      <div class="issue-detail">relative h-screen min-h-[750px: 0px top, about: 192px top, section-charcoal section-paddi: 192px top, section-forest section-padding: 192px top, section-warm-white section-pad: 192px top, section-stone section-padding-: 192px top</div>
+      <div class="issue-fix">Use py-20 (80px) or py-32 (128px) consistently on all sections</div>
+    </div>
+    
+    <div class="issue critical">
+      <div class="issue-header">
+        <span class="issue-id">SP-01</span>
+        <span class="issue-label">Inconsistent section padding</span>
+      </div>
+      <div class="issue-detail">relative h-screen min-h-[750px: 0px top, about: 192px top, section-charcoal section-paddi: 192px top, section-forest section-padding: 192px top, section-warm-white section-pad: 192px top, section-stone section-padding-: 192px top</div>
+      <div class="issue-fix">Use py-20 (80px) or py-32 (128px) consistently on all sections</div>
+    </div>
+    
+    <div class="issue critical">
+      <div class="issue-header">
+        <span class="issue-id">SP-01</span>
+        <span class="issue-label">Inconsistent section padding</span>
+      </div>
+      <div class="issue-detail">section-charcoal relative h-[5: 0px top</div>
+      <div class="issue-fix">Use py-20 (80px) or py-32 (128px) consistently on all sections</div>
+    </div>
+    
+    <div class="issue critical">
+      <div class="issue-header">
+        <span class="issue-id">SP-01</span>
+        <span class="issue-label">Inconsistent section padding</span>
+      </div>
+      <div class="issue-detail">section-charcoal relative h-[5: 0px top</div>
+      <div class="issue-fix">Use py-20 (80px) or py-32 (128px) consistently on all sections</div>
+    </div>
+    
+    <div class="issue critical">
+      <div class="issue-header">
+        <span class="issue-id">SP-01</span>
+        <span class="issue-label">Inconsistent section padding</span>
+      </div>
+      <div class="issue-detail">section-charcoal relative h-[5: 0px top, section-warm-white section-pad: 192px top, section-warm-white section-pad: 192px top</div>
+      <div class="issue-fix">Use py-20 (80px) or py-32 (128px) consistently on all sections</div>
+    </div>
+    
+    <div class="issue critical">
+      <div class="issue-header">
+        <span class="issue-id">SP-01</span>
+        <span class="issue-label">Inconsistent section padding</span>
+      </div>
+      <div class="issue-detail">section-charcoal relative h-[5: 0px top, section-warm-white section-pad: 192px top, section-warm-white section-pad: 192px top</div>
+      <div class="issue-fix">Use py-20 (80px) or py-32 (128px) consistently on all sections</div>
+    </div>
+    
+    <div class="issue critical">
+      <div class="issue-header">
+        <span class="issue-id">SP-01</span>
+        <span class="issue-label">Inconsistent section padding</span>
+      </div>
+      <div class="issue-detail">relative h-[60vh] min-h-[500px: 0px top, section-warm-white: 0px top</div>
+      <div class="issue-fix">Use py-20 (80px) or py-32 (128px) consistently on all sections</div>
+    </div>
+    
+    <div class="issue critical">
+      <div class="issue-header">
+        <span class="issue-id">SP-01</span>
+        <span class="issue-label">Inconsistent section padding</span>
+      </div>
+      <div class="issue-detail">relative h-[60vh] min-h-[500px: 0px top, section-warm-white: 0px top</div>
+      <div class="issue-fix">Use py-20 (80px) or py-32 (128px) consistently on all sections</div>
+    </div>
+    
+    <div class="issue critical">
+      <div class="issue-header">
+        <span class="issue-id">SP-01</span>
+        <span class="issue-label">Inconsistent section padding</span>
+      </div>
+      <div class="issue-detail">relative h-[60vh] min-h-[500px: 0px top, section-warm-white: 0px top, section-charcoal section-paddi: 192px top</div>
+      <div class="issue-fix">Use py-20 (80px) or py-32 (128px) consistently on all sections</div>
+    </div>
+    
+    <div class="issue critical">
+      <div class="issue-header">
+        <span class="issue-id">SP-01</span>
+        <span class="issue-label">Inconsistent section padding</span>
+      </div>
+      <div class="issue-detail">relative h-[60vh] min-h-[500px: 0px top, section-warm-white: 0px top, section-charcoal section-paddi: 192px top</div>
+      <div class="issue-fix">Use py-20 (80px) or py-32 (128px) consistently on all sections</div>
+    </div>
+    
+    <div class="issue critical">
+      <div class="issue-header">
+        <span class="issue-id">SP-01</span>
+        <span class="issue-label">Inconsistent section padding</span>
+      </div>
+      <div class="issue-detail">relative h-screen min-h-[700px: 0px top</div>
+      <div class="issue-fix">Use py-20 (80px) or py-32 (128px) consistently on all sections</div>
+    </div>
+    
+    <div class="issue critical">
+      <div class="issue-header">
+        <span class="issue-id">CC-01</span>
+        <span class="issue-label">1 text contrast failures</span>
+      </div>
+      <div class="issue-detail">A "Voranmeldung & Anfrage": 3.09:1 (need 4.5:1)</div>
+      <div class="issue-fix">Increase text/background color contrast to meet WCAG AA (4.5:1 normal, 3:1 large text)</div>
+    </div>
+    
+    <div class="issue critical">
+      <div class="issue-header">
+        <span class="issue-id">SP-01</span>
+        <span class="issue-label">Inconsistent section padding</span>
+      </div>
+      <div class="issue-detail">relative h-screen min-h-[700px: 0px top</div>
+      <div class="issue-fix">Use py-20 (80px) or py-32 (128px) consistently on all sections</div>
+    </div>
+    
+    <div class="issue critical">
+      <div class="issue-header">
+        <span class="issue-id">CC-01</span>
+        <span class="issue-label">1 text contrast failures</span>
+      </div>
+      <div class="issue-detail">A "Voranmeldung & Anfrage": 3.09:1 (need 4.5:1)</div>
+      <div class="issue-fix">Increase text/background color contrast to meet WCAG AA (4.5:1 normal, 3:1 large text)</div>
+    </div>
+    
+    <div class="issue critical">
+      <div class="issue-header">
+        <span class="issue-id">SP-01</span>
+        <span class="issue-label">Inconsistent section padding</span>
+      </div>
+      <div class="issue-detail">relative h-screen min-h-[700px: 0px top, section-padding-lg relative ov: 192px top, section-padding-lg: 192px top, section-padding-lg: 192px top, reservation: 192px top</div>
+      <div class="issue-fix">Use py-20 (80px) or py-32 (128px) consistently on all sections</div>
+    </div>
+    
+    <div class="issue critical">
+      <div class="issue-header">
+        <span class="issue-id">CC-01</span>
+        <span class="issue-label">1 text contrast failures</span>
+      </div>
+      <div class="issue-detail">A "Voranmeldung & Anfrage": 3.09:1 (need 4.5:1)</div>
+      <div class="issue-fix">Increase text/background color contrast to meet WCAG AA (4.5:1 normal, 3:1 large text)</div>
+    </div>
+    
+    <div class="issue critical">
+      <div class="issue-header">
+        <span class="issue-id">SP-01</span>
+        <span class="issue-label">Inconsistent section padding</span>
+      </div>
+      <div class="issue-detail">relative h-screen min-h-[700px: 0px top, section-padding-lg relative ov: 192px top, section-padding-lg: 192px top, section-padding-lg: 192px top, reservation: 192px top</div>
+      <div class="issue-fix">Use py-20 (80px) or py-32 (128px) consistently on all sections</div>
+    </div>
+    
+    <div class="issue critical">
+      <div class="issue-header">
+        <span class="issue-id">CC-01</span>
+        <span class="issue-label">1 text contrast failures</span>
+      </div>
+      <div class="issue-detail">A "Voranmeldung & Anfrage": 3.09:1 (need 4.5:1)</div>
+      <div class="issue-fix">Increase text/background color contrast to meet WCAG AA (4.5:1 normal, 3:1 large text)</div>
+    </div>
+    
+    <div class="issue critical">
+      <div class="issue-header">
+        <span class="issue-id">SP-01</span>
+        <span class="issue-label">Inconsistent section padding</span>
+      </div>
+      <div class="issue-detail">section-warm-white: 0px top</div>
+      <div class="issue-fix">Use py-20 (80px) or py-32 (128px) consistently on all sections</div>
+    </div>
+    
+    <div class="issue critical">
+      <div class="issue-header">
+        <span class="issue-id">SP-01</span>
+        <span class="issue-label">Inconsistent section padding</span>
+      </div>
+      <div class="issue-detail">section-warm-white: 0px top</div>
+      <div class="issue-fix">Use py-20 (80px) or py-32 (128px) consistently on all sections</div>
+    </div>
+    
+    <div class="issue critical">
+      <div class="issue-header">
+        <span class="issue-id">SP-01</span>
+        <span class="issue-label">Inconsistent section padding</span>
+      </div>
+      <div class="issue-detail">section-warm-white: 0px top, section-warm-white section-pad: 192px top, section-charcoal section-paddi: 192px top</div>
+      <div class="issue-fix">Use py-20 (80px) or py-32 (128px) consistently on all sections</div>
+    </div>
+    
+    <div class="issue critical">
+      <div class="issue-header">
+        <span class="issue-id">SP-01</span>
+        <span class="issue-label">Inconsistent section padding</span>
+      </div>
+      <div class="issue-detail">section-warm-white: 0px top, section-warm-white section-pad: 192px top, section-charcoal section-paddi: 192px top</div>
+      <div class="issue-fix">Use py-20 (80px) or py-32 (128px) consistently on all sections</div>
+    </div>
+    
+    <div class="issue critical">
+      <div class="issue-header">
+        <span class="issue-id">GD-03</span>
+        <span class="issue-label">Page failed to load</span>
+      </div>
+      <div class="issue-detail">page.goto: Timeout 15000ms exceeded.
+Call log:
+  - navigating to "http://localhost:3000/kontakt", waiting until "networkidle"
+</div>
+      <div class="issue-fix">Check dev server is running</div>
+    </div>
+    
+    <div class="issue critical">
+      <div class="issue-header">
+        <span class="issue-id">SP-01</span>
+        <span class="issue-label">Inconsistent section padding</span>
+      </div>
+      <div class="issue-detail">section-warm-white section-pad: 192px top, section-warm-white section-pad: 192px top</div>
+      <div class="issue-fix">Use py-20 (80px) or py-32 (128px) consistently on all sections</div>
+    </div>
+    
+    <div class="issue critical">
+      <div class="issue-header">
+        <span class="issue-id">SP-01</span>
+        <span class="issue-label">Inconsistent section padding</span>
+      </div>
+      <div class="issue-detail">section-warm-white section-pad: 192px top, section-warm-white section-pad: 192px top</div>
+      <div class="issue-fix">Use py-20 (80px) or py-32 (128px) consistently on all sections</div>
+    </div>
+    
+  </div>
+  
+  <div class="issues-section">
+    <div class="section-title"><span class="tag tag-high">high</span> 5 issues</div>
+    
+    <div class="issue high">
+      <div class="issue-header">
+        <span class="issue-id">RE-03</span>
+        <span class="issue-label">16 touch targets too small</span>
+      </div>
+      <div class="issue-detail">A "AMAlti Metzg", BUTTON "", A "Zum Dorfladen"</div>
+      <div class="issue-fix">Add min-height: 44px; min-width: 44px to all interactive elements</div>
+    </div>
+    
+    <div class="issue high">
+      <div class="issue-header">
+        <span class="issue-id">RE-03</span>
+        <span class="issue-label">13 touch targets too small</span>
+      </div>
+      <div class="issue-detail">A "AMAlti Metzg", BUTTON "", A "Reservierung"</div>
+      <div class="issue-fix">Add min-height: 44px; min-width: 44px to all interactive elements</div>
+    </div>
+    
+    <div class="issue high">
+      <div class="issue-header">
+        <span class="issue-id">RE-03</span>
+        <span class="issue-label">14 touch targets too small</span>
+      </div>
+      <div class="issue-detail">A "AMAlti Metzg", BUTTON "", A "Zum Bistro"</div>
+      <div class="issue-fix">Add min-height: 44px; min-width: 44px to all interactive elements</div>
+    </div>
+    
+    <div class="issue high">
+      <div class="issue-header">
+        <span class="issue-id">RE-03</span>
+        <span class="issue-label">16 touch targets too small</span>
+      </div>
+      <div class="issue-detail">A "AMAlti Metzg", BUTTON "", A "Voranmeldung & Anfra"</div>
+      <div class="issue-fix">Add min-height: 44px; min-width: 44px to all interactive elements</div>
+    </div>
+    
+    <div class="issue high">
+      <div class="issue-header">
+        <span class="issue-id">RE-03</span>
+        <span class="issue-label">14 touch targets too small</span>
+      </div>
+      <div class="issue-detail">A "AMAlti Metzg", BUTTON "", A "Kontakt"</div>
+      <div class="issue-fix">Add min-height: 44px; min-width: 44px to all interactive elements</div>
+    </div>
+    
+  </div>
+  
+  <div class="issues-section">
+    <div class="section-title"><span class="tag tag-medium">medium</span> 15 issues</div>
+    
+    <div class="issue medium">
+      <div class="issue-header">
+        <span class="issue-id">AN-06</span>
+        <span class="issue-label">Navbar does not change on scroll</span>
+      </div>
+      
+      <div class="issue-fix">Add scroll listener: toggle .scrolled class with frosted glass background</div>
+    </div>
+    
+    <div class="issue medium">
+      <div class="issue-header">
+        <span class="issue-id">AN-06</span>
+        <span class="issue-label">Navbar does not change on scroll</span>
+      </div>
+      
+      <div class="issue-fix">Add scroll listener: toggle .scrolled class with frosted glass background</div>
+    </div>
+    
+    <div class="issue medium">
+      <div class="issue-header">
+        <span class="issue-id">AN-06</span>
+        <span class="issue-label">Navbar does not change on scroll</span>
+      </div>
+      
+      <div class="issue-fix">Add scroll listener: toggle .scrolled class with frosted glass background</div>
+    </div>
+    
+    <div class="issue medium">
+      <div class="issue-header">
+        <span class="issue-id">AN-06</span>
+        <span class="issue-label">Navbar does not change on scroll</span>
+      </div>
+      
+      <div class="issue-fix">Add scroll listener: toggle .scrolled class with frosted glass background</div>
+    </div>
+    
+    <div class="issue medium">
+      <div class="issue-header">
+        <span class="issue-id">AN-06</span>
+        <span class="issue-label">Navbar does not change on scroll</span>
+      </div>
+      
+      <div class="issue-fix">Add scroll listener: toggle .scrolled class with frosted glass background</div>
+    </div>
+    
+    <div class="issue medium">
+      <div class="issue-header">
+        <span class="issue-id">AN-06</span>
+        <span class="issue-label">Navbar does not change on scroll</span>
+      </div>
+      
+      <div class="issue-fix">Add scroll listener: toggle .scrolled class with frosted glass background</div>
+    </div>
+    
+    <div class="issue medium">
+      <div class="issue-header">
+        <span class="issue-id">AN-06</span>
+        <span class="issue-label">Navbar does not change on scroll</span>
+      </div>
+      
+      <div class="issue-fix">Add scroll listener: toggle .scrolled class with frosted glass background</div>
+    </div>
+    
+    <div class="issue medium">
+      <div class="issue-header">
+        <span class="issue-id">AN-06</span>
+        <span class="issue-label">Navbar does not change on scroll</span>
+      </div>
+      
+      <div class="issue-fix">Add scroll listener: toggle .scrolled class with frosted glass background</div>
+    </div>
+    
+    <div class="issue medium">
+      <div class="issue-header">
+        <span class="issue-id">AN-06</span>
+        <span class="issue-label">Navbar does not change on scroll</span>
+      </div>
+      
+      <div class="issue-fix">Add scroll listener: toggle .scrolled class with frosted glass background</div>
+    </div>
+    
+    <div class="issue medium">
+      <div class="issue-header">
+        <span class="issue-id">AN-06</span>
+        <span class="issue-label">Navbar does not change on scroll</span>
+      </div>
+      
+      <div class="issue-fix">Add scroll listener: toggle .scrolled class with frosted glass background</div>
+    </div>
+    
+    <div class="issue medium">
+      <div class="issue-header">
+        <span class="issue-id">AN-06</span>
+        <span class="issue-label">Navbar does not change on scroll</span>
+      </div>
+      
+      <div class="issue-fix">Add scroll listener: toggle .scrolled class with frosted glass background</div>
+    </div>
+    
+    <div class="issue medium">
+      <div class="issue-header">
+        <span class="issue-id">AN-06</span>
+        <span class="issue-label">Navbar does not change on scroll</span>
+      </div>
+      
+      <div class="issue-fix">Add scroll listener: toggle .scrolled class with frosted glass background</div>
+    </div>
+    
+    <div class="issue medium">
+      <div class="issue-header">
+        <span class="issue-id">AN-06</span>
+        <span class="issue-label">Navbar does not change on scroll</span>
+      </div>
+      
+      <div class="issue-fix">Add scroll listener: toggle .scrolled class with frosted glass background</div>
+    </div>
+    
+    <div class="issue medium">
+      <div class="issue-header">
+        <span class="issue-id">AN-06</span>
+        <span class="issue-label">Navbar does not change on scroll</span>
+      </div>
+      
+      <div class="issue-fix">Add scroll listener: toggle .scrolled class with frosted glass background</div>
+    </div>
+    
+    <div class="issue medium">
+      <div class="issue-header">
+        <span class="issue-id">AN-06</span>
+        <span class="issue-label">Navbar does not change on scroll</span>
+      </div>
+      
+      <div class="issue-fix">Add scroll listener: toggle .scrolled class with frosted glass background</div>
+    </div>
+    
+  </div>
+  
+
+  <!-- Passed checks -->
+  
+  <div class="issues-section">
+    <div class="section-title">Passed checks (165)</div>
+    <div class="passed-grid">
+      <div class="passed-item">[SP-02] No orphaned whitespace</div><div class="passed-item">[SP-05] No horizontal overflow</div><div class="passed-item">[AN-01] Scroll reveal: 7/7 sections</div><div class="passed-item">[AN-02] All interactive elements have hover transitions</div><div class="passed-item">[TY-01] Font loaded: Bebas Neue</div><div class="passed-item">[TY-02] Font loaded: DM Sans</div><div class="passed-item">[RE-01] No horizontal overflow at 375px</div><div class="passed-item">[SP-02] No orphaned whitespace</div><div class="passed-item">[SP-05] No horizontal overflow</div><div class="passed-item">[AN-01] Scroll reveal: 7/7 sections</div><div class="passed-item">[AN-02] All interactive elements have hover transitions</div><div class="passed-item">[AN-06] Navbar changes on scroll</div><div class="passed-item">[CC-01] Text contrast WCAG AA pass</div><div class="passed-item">[TY-01] Font loaded: Bebas Neue</div><div class="passed-item">[TY-02] Font loaded: DM Sans</div><div class="passed-item">[SP-02] No orphaned whitespace</div><div class="passed-item">[SP-05] No horizontal overflow</div><div class="passed-item">[AN-01] Scroll reveal: 7/7 sections</div><div class="passed-item">[AN-02] All interactive elements have hover transitions</div><div class="passed-item">[AN-06] Navbar changes on scroll</div><div class="passed-item">[CC-01] Text contrast WCAG AA pass</div><div class="passed-item">[TY-01] Font loaded: Bebas Neue</div><div class="passed-item">[TY-02] Font loaded: DM Sans</div><div class="passed-item">[SP-02] No orphaned whitespace</div><div class="passed-item">[SP-05] No horizontal overflow</div><div class="passed-item">[AN-01] Scroll reveal: 7/7 sections</div><div class="passed-item">[AN-02] All interactive elements have hover transitions</div><div class="passed-item">[AN-06] Navbar changes on scroll</div><div class="passed-item">[CC-01] Text contrast WCAG AA pass</div><div class="passed-item">[TY-01] Font loaded: Bebas Neue</div><div class="passed-item">[TY-02] Font loaded: DM Sans</div><div class="passed-item">[SP-02] No orphaned whitespace</div><div class="passed-item">[SP-05] No horizontal overflow</div><div class="passed-item">[AN-01] Scroll reveal: 5/5 sections</div><div class="passed-item">[AN-02] All interactive elements have hover transitions</div><div class="passed-item">[CC-01] Text contrast WCAG AA pass</div><div class="passed-item">[TY-01] Font loaded: Bebas Neue</div><div class="passed-item">[TY-02] Font loaded: DM Sans</div><div class="passed-item">[RE-01] No horizontal overflow at 375px</div><div class="passed-item">[SP-02] No orphaned whitespace</div><div class="passed-item">[SP-05] No horizontal overflow</div><div class="passed-item">[AN-01] Scroll reveal: 5/5 sections</div><div class="passed-item">[AN-02] All interactive elements have hover transitions</div><div class="passed-item">[CC-01] Text contrast WCAG AA pass</div><div class="passed-item">[TY-01] Font loaded: Bebas Neue</div><div class="passed-item">[TY-02] Font loaded: DM Sans</div><div class="passed-item">[SP-02] No orphaned whitespace</div><div class="passed-item">[SP-05] No horizontal overflow</div><div class="passed-item">[AN-01] Scroll reveal: 5/5 sections</div><div class="passed-item">[AN-02] All interactive elements have hover transitions</div><div class="passed-item">[CC-01] Text contrast WCAG AA pass</div><div class="passed-item">[TY-01] Font loaded: Bebas Neue</div><div class="passed-item">[TY-02] Font loaded: DM Sans</div><div class="passed-item">[SP-02] No orphaned whitespace</div><div class="passed-item">[SP-05] No horizontal overflow</div><div class="passed-item">[AN-01] Scroll reveal: 5/5 sections</div><div class="passed-item">[AN-02] All interactive elements have hover transitions</div><div class="passed-item">[CC-01] Text contrast WCAG AA pass</div><div class="passed-item">[TY-01] Font loaded: Bebas Neue</div><div class="passed-item">[TY-02] Font loaded: DM Sans</div><div class="passed-item">[SP-02] No orphaned whitespace</div><div class="passed-item">[SP-05] No horizontal overflow</div><div class="passed-item">[AN-01] Scroll reveal: 5/5 sections</div><div class="passed-item">[AN-02] All interactive elements have hover transitions</div><div class="passed-item">[CC-01] Text contrast WCAG AA pass</div><div class="passed-item">[TY-01] Font loaded: Bebas Neue</div><div class="passed-item">[TY-02] Font loaded: DM Sans</div><div class="passed-item">[RE-01] No horizontal overflow at 375px</div><div class="passed-item">[SP-02] No orphaned whitespace</div><div class="passed-item">[SP-05] No horizontal overflow</div><div class="passed-item">[AN-01] Scroll reveal: 5/5 sections</div><div class="passed-item">[AN-02] All interactive elements have hover transitions</div><div class="passed-item">[CC-01] Text contrast WCAG AA pass</div><div class="passed-item">[TY-01] Font loaded: Bebas Neue</div><div class="passed-item">[TY-02] Font loaded: DM Sans</div><div class="passed-item">[SP-02] No orphaned whitespace</div><div class="passed-item">[SP-05] No horizontal overflow</div><div class="passed-item">[AN-01] Scroll reveal: 5/5 sections</div><div class="passed-item">[AN-02] All interactive elements have hover transitions</div><div class="passed-item">[CC-01] Text contrast WCAG AA pass</div><div class="passed-item">[TY-01] Font loaded: Bebas Neue</div><div class="passed-item">[TY-02] Font loaded: DM Sans</div><div class="passed-item">[SP-02] No orphaned whitespace</div><div class="passed-item">[SP-05] No horizontal overflow</div><div class="passed-item">[AN-01] Scroll reveal: 5/5 sections</div><div class="passed-item">[AN-02] All interactive elements have hover transitions</div><div class="passed-item">[CC-01] Text contrast WCAG AA pass</div><div class="passed-item">[TY-01] Font loaded: Bebas Neue</div><div class="passed-item">[TY-02] Font loaded: DM Sans</div><div class="passed-item">[SP-02] No orphaned whitespace</div><div class="passed-item">[SP-05] No horizontal overflow</div><div class="passed-item">[AN-01] Scroll reveal: 6/6 sections</div><div class="passed-item">[AN-02] All interactive elements have hover transitions</div><div class="passed-item">[TY-01] Font loaded: Bebas Neue</div><div class="passed-item">[TY-02] Font loaded: DM Sans</div><div class="passed-item">[RE-01] No horizontal overflow at 375px</div><div class="passed-item">[SP-02] No orphaned whitespace</div><div class="passed-item">[SP-05] No horizontal overflow</div><div class="passed-item">[AN-01] Scroll reveal: 6/6 sections</div><div class="passed-item">[AN-02] All interactive elements have hover transitions</div><div class="passed-item">[TY-01] Font loaded: Bebas Neue</div><div class="passed-item">[TY-02] Font loaded: DM Sans</div><div class="passed-item">[SP-02] No orphaned whitespace</div><div class="passed-item">[SP-05] No horizontal overflow</div><div class="passed-item">[AN-01] Scroll reveal: 6/6 sections</div><div class="passed-item">[AN-02] All interactive elements have hover transitions</div><div class="passed-item">[TY-01] Font loaded: Bebas Neue</div><div class="passed-item">[TY-02] Font loaded: DM Sans</div><div class="passed-item">[SP-02] No orphaned whitespace</div><div class="passed-item">[SP-05] No horizontal overflow</div><div class="passed-item">[AN-01] Scroll reveal: 6/6 sections</div><div class="passed-item">[AN-02] All interactive elements have hover transitions</div><div class="passed-item">[TY-01] Font loaded: Bebas Neue</div><div class="passed-item">[TY-02] Font loaded: DM Sans</div><div class="passed-item">[SP-02] No orphaned whitespace</div><div class="passed-item">[SP-05] No horizontal overflow</div><div class="passed-item">[AN-01] Scroll reveal: 5/5 sections</div><div class="passed-item">[AN-02] All interactive elements have hover transitions</div><div class="passed-item">[CC-01] Text contrast WCAG AA pass</div><div class="passed-item">[TY-01] Font loaded: Bebas Neue</div><div class="passed-item">[TY-02] Font loaded: DM Sans</div><div class="passed-item">[RE-01] No horizontal overflow at 375px</div><div class="passed-item">[SP-02] No orphaned whitespace</div><div class="passed-item">[SP-05] No horizontal overflow</div><div class="passed-item">[AN-01] Scroll reveal: 5/5 sections</div><div class="passed-item">[AN-02] All interactive elements have hover transitions</div><div class="passed-item">[CC-01] Text contrast WCAG AA pass</div><div class="passed-item">[TY-01] Font loaded: Bebas Neue</div><div class="passed-item">[TY-02] Font loaded: DM Sans</div><div class="passed-item">[SP-02] No orphaned whitespace</div><div class="passed-item">[SP-05] No horizontal overflow</div><div class="passed-item">[AN-01] Scroll reveal: 5/5 sections</div><div class="passed-item">[AN-02] All interactive elements have hover transitions</div><div class="passed-item">[CC-01] Text contrast WCAG AA pass</div><div class="passed-item">[TY-01] Font loaded: Bebas Neue</div><div class="passed-item">[TY-02] Font loaded: DM Sans</div><div class="passed-item">[SP-02] No orphaned whitespace</div><div class="passed-item">[SP-05] No horizontal overflow</div><div class="passed-item">[AN-01] Scroll reveal: 5/5 sections</div><div class="passed-item">[AN-02] All interactive elements have hover transitions</div><div class="passed-item">[CC-01] Text contrast WCAG AA pass</div><div class="passed-item">[TY-01] Font loaded: Bebas Neue</div><div class="passed-item">[TY-02] Font loaded: DM Sans</div><div class="passed-item">[SP-01] Section padding consistent</div><div class="passed-item">[SP-02] No orphaned whitespace</div><div class="passed-item">[SP-05] No horizontal overflow</div><div class="passed-item">[AN-01] Scroll reveal: 4/4 sections</div><div class="passed-item">[AN-02] All interactive elements have hover transitions</div><div class="passed-item">[CC-01] Text contrast WCAG AA pass</div><div class="passed-item">[TY-01] Font loaded: Bebas Neue</div><div class="passed-item">[TY-02] Font loaded: DM Sans</div><div class="passed-item">[SP-02] No orphaned whitespace</div><div class="passed-item">[SP-05] No horizontal overflow</div><div class="passed-item">[AN-01] Scroll reveal: 4/4 sections</div><div class="passed-item">[AN-02] All interactive elements have hover transitions</div><div class="passed-item">[CC-01] Text contrast WCAG AA pass</div><div class="passed-item">[TY-01] Font loaded: Bebas Neue</div><div class="passed-item">[TY-02] Font loaded: DM Sans</div><div class="passed-item">[SP-02] No orphaned whitespace</div><div class="passed-item">[SP-05] No horizontal overflow</div><div class="passed-item">[AN-01] Scroll reveal: 4/4 sections</div><div class="passed-item">[AN-02] All interactive elements have hover transitions</div><div class="passed-item">[CC-01] Text contrast WCAG AA pass</div><div class="passed-item">[TY-01] Font loaded: Bebas Neue</div><div class="passed-item">[TY-02] Font loaded: DM Sans</div>
+    </div>
+  </div>
+  
+
+  <!-- Screenshots -->
+  
+  <div class="issues-section">
+    <div class="section-title">Screenshots</div>
+    <div class="screenshots">
+      
+      <div class="screenshot-card">
+        <img src="screenshots/_-375.png" alt="/ @ 375px">
+        <div class="screenshot-label">/ · 375px</div>
+      </div>
+      
+      <div class="screenshot-card">
+        <img src="screenshots/_-768.png" alt="/ @ 768px">
+        <div class="screenshot-label">/ · 768px</div>
+      </div>
+      
+      <div class="screenshot-card">
+        <img src="screenshots/_-1280.png" alt="/ @ 1280px">
+        <div class="screenshot-label">/ · 1280px</div>
+      </div>
+      
+      <div class="screenshot-card">
+        <img src="screenshots/_-1440.png" alt="/ @ 1440px">
+        <div class="screenshot-label">/ · 1440px</div>
+      </div>
+      
+      <div class="screenshot-card">
+        <img src="screenshots/_bistro-375.png" alt="/bistro @ 375px">
+        <div class="screenshot-label">/bistro · 375px</div>
+      </div>
+      
+      <div class="screenshot-card">
+        <img src="screenshots/_bistro-768.png" alt="/bistro @ 768px">
+        <div class="screenshot-label">/bistro · 768px</div>
+      </div>
+      
+      <div class="screenshot-card">
+        <img src="screenshots/_bistro-1280.png" alt="/bistro @ 1280px">
+        <div class="screenshot-label">/bistro · 1280px</div>
+      </div>
+      
+      <div class="screenshot-card">
+        <img src="screenshots/_bistro-1440.png" alt="/bistro @ 1440px">
+        <div class="screenshot-label">/bistro · 1440px</div>
+      </div>
+      
+      <div class="screenshot-card">
+        <img src="screenshots/_dorfladen-375.png" alt="/dorfladen @ 375px">
+        <div class="screenshot-label">/dorfladen · 375px</div>
+      </div>
+      
+      <div class="screenshot-card">
+        <img src="screenshots/_dorfladen-768.png" alt="/dorfladen @ 768px">
+        <div class="screenshot-label">/dorfladen · 768px</div>
+      </div>
+      
+      <div class="screenshot-card">
+        <img src="screenshots/_dorfladen-1280.png" alt="/dorfladen @ 1280px">
+        <div class="screenshot-label">/dorfladen · 1280px</div>
+      </div>
+      
+      <div class="screenshot-card">
+        <img src="screenshots/_dorfladen-1440.png" alt="/dorfladen @ 1440px">
+        <div class="screenshot-label">/dorfladen · 1440px</div>
+      </div>
+      
+      <div class="screenshot-card">
+        <img src="screenshots/_carnotzet-375.png" alt="/carnotzet @ 375px">
+        <div class="screenshot-label">/carnotzet · 375px</div>
+      </div>
+      
+      <div class="screenshot-card">
+        <img src="screenshots/_carnotzet-768.png" alt="/carnotzet @ 768px">
+        <div class="screenshot-label">/carnotzet · 768px</div>
+      </div>
+      
+      <div class="screenshot-card">
+        <img src="screenshots/_carnotzet-1280.png" alt="/carnotzet @ 1280px">
+        <div class="screenshot-label">/carnotzet · 1280px</div>
+      </div>
+      
+      <div class="screenshot-card">
+        <img src="screenshots/_carnotzet-1440.png" alt="/carnotzet @ 1440px">
+        <div class="screenshot-label">/carnotzet · 1440px</div>
+      </div>
+      
+      <div class="screenshot-card">
+        <img src="screenshots/_ueber-uns-375.png" alt="/ueber-uns @ 375px">
+        <div class="screenshot-label">/ueber-uns · 375px</div>
+      </div>
+      
+      <div class="screenshot-card">
+        <img src="screenshots/_ueber-uns-768.png" alt="/ueber-uns @ 768px">
+        <div class="screenshot-label">/ueber-uns · 768px</div>
+      </div>
+      
+      <div class="screenshot-card">
+        <img src="screenshots/_ueber-uns-1280.png" alt="/ueber-uns @ 1280px">
+        <div class="screenshot-label">/ueber-uns · 1280px</div>
+      </div>
+      
+      <div class="screenshot-card">
+        <img src="screenshots/_ueber-uns-1440.png" alt="/ueber-uns @ 1440px">
+        <div class="screenshot-label">/ueber-uns · 1440px</div>
+      </div>
+      
+      <div class="screenshot-card">
+        <img src="screenshots/_kontakt-768.png" alt="/kontakt @ 768px">
+        <div class="screenshot-label">/kontakt · 768px</div>
+      </div>
+      
+      <div class="screenshot-card">
+        <img src="screenshots/_kontakt-1280.png" alt="/kontakt @ 1280px">
+        <div class="screenshot-label">/kontakt · 1280px</div>
+      </div>
+      
+      <div class="screenshot-card">
+        <img src="screenshots/_kontakt-1440.png" alt="/kontakt @ 1440px">
+        <div class="screenshot-label">/kontakt · 1440px</div>
+      </div>
+      
+    </div>
+  </div>
+  
+</div>
+
+<div class="footer">QA Visual Agent · Score 30/100 · Threshold 85 · Generated 2026-03-01T14:45:23.165Z</div>
+</body>
+</html>

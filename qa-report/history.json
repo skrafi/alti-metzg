@@ -1,0 +1,17 @@
+[
+  {
+    "timestamp": "2026-03-01T14:45:23.167Z",
+    "url": "http://localhost:3000",
+    "score": 30,
+    "status": "FAIL",
+    "breakdown": {
+      "spacing": 66,
+      "animations": 77,
+      "contrast": 78,
+      "typography": 100,
+      "responsive": 50
+    },
+    "issues": 49,
+    "passed": 165
+  }
+]

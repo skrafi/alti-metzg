@@ -245,11 +245,11 @@ export default function UeberUnsPage() {
             probier unser Bistro oder reserviere das Carnotzet.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link href="/kontakt" className="btn btn-primary">
+            <Link href="/kontakt" className="btn btn-primary min-h-[44px] min-w-[44px]">
               Kontakt
               <ArrowRight size={14} />
             </Link>
-            <Link href="/carnotzet" className="btn btn-ghost-dark">
+            <Link href="/carnotzet" className="btn btn-ghost-dark min-h-[44px] min-w-[44px]">
               Carnotzet
             </Link>
           </div>

@@ -193,11 +193,11 @@ export default function DorfladenPage() {
             die Speisekarte orientiert sich an dem, was wir im Laden haben.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link href="/bistro" className="btn btn-primary">
+            <Link href="/bistro" className="btn btn-primary min-h-[44px] min-w-[44px]">
               Zum Bistro
               <ArrowRight size={14} />
             </Link>
-            <Link href="/kontakt" className="btn btn-ghost-dark">
+            <Link href="/kontakt" className="btn btn-ghost-dark min-h-[44px] min-w-[44px]">
               Kontakt & Anfahrt
             </Link>
           </div>

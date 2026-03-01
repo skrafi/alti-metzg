@@ -75,7 +75,7 @@ export default function Home() {
               </ul>
               <Link
                 href="/dorfladen"
-                className="btn btn-primary"
+                className="btn btn-primary min-h-[44px] min-w-[44px]"
               >
                 Zum Dorfladen
                 <ArrowRight size={14} />
@@ -123,7 +123,7 @@ export default function Home() {
               </div>
               <Link
                 href="/bistro"
-                className="btn"
+                className="btn min-h-[44px] min-w-[44px]"
                 style={{
                   backgroundColor: "var(--aged-brass)",
                   color: "white"
@@ -202,7 +202,7 @@ export default function Home() {
             </div>
             <Link
               href="/carnotzet"
-              className="btn"
+              className="btn min-h-[44px] min-w-[44px]"
               style={{
                 backgroundColor: "var(--aged-brass)",
                 color: "white"
@@ -328,7 +328,7 @@ export default function Home() {
 
               <Link
                 href="/kontakt"
-                className="btn btn-primary"
+                className="btn btn-primary min-h-[44px] min-w-[44px]"
               >
                 Kontakt & Anfahrt
                 <ArrowRight size={14} />

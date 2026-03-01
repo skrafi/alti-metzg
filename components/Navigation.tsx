@@ -53,7 +53,7 @@ export default function Navigation() {
       >
         <div className="max-w-7xl mx-auto px-6 lg:px-16 h-full flex items-center justify-between">
           {/* Logo */}
-          <Link href="/" className="group flex items-center gap-3">
+          <Link href="/" className="group flex items-center gap-3 min-h-[44px] min-w-[44px]">
             <div
               className={`w-9 h-9 rounded-full border flex items-center justify-center transition-all duration-500 ${
                 showBlurredNav
@@ -85,7 +85,7 @@ export default function Navigation() {
               <Link
                 key={link.href}
                 href={link.href}
-                className={`nav-link ${
+                className={`nav-link min-h-[44px] min-w-[44px] flex items-center ${
                   showBlurredNav
                     ? pathname === link.href
                       ? "nav-link-dark active"
@@ -104,15 +104,14 @@ export default function Navigation() {
           <div className="flex items-center gap-4">
             <Link
               href="/kontakt"
-              className={`hidden md:flex items-center gap-2 px-6 py-2.5 text-[11px] font-medium tracking-[0.1em] uppercase transition-all duration-300 hover:-translate-y-0.5 ${
+              className={`hidden md:flex items-center justify-center gap-2 px-6 py-3 min-h-[44px] text-[11px] font-medium tracking-[0.1em] uppercase transition-all duration-300 hover:-translate-y-0.5 ${
                 showBlurredNav
                   ? "bg-charcoal text-warm-white hover:bg-deep-forest"
-                  : "bg-white/10 text-white border border-white/30 hover:bg-white/20"
+                  : "bg-charcoal/90 text-white hover:bg-charcoal shadow-lg"
               }`}
               style={{
-                backgroundColor: showBlurredNav ? "var(--charcoal)" : "rgba(255,255,255,0.1)",
-                borderColor: !showBlurredNav ? "rgba(255,255,255,0.3)" : undefined,
-                color: showBlurredNav ? "var(--warm-white)" : "white"
+                backgroundColor: showBlurredNav ? "var(--charcoal)" : "rgba(30,30,28,0.9)",
+                color: "var(--warm-white)"
               }}
             >
               Tisch reservieren
@@ -121,8 +120,8 @@ export default function Navigation() {
             {/* Mobile Menu Button */}
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className={`lg:hidden w-10 h-10 flex items-center justify-center transition-colors ${
-                showBlurredNav ? "text-charcoal" : "text-white"
+              className={`lg:hidden w-12 h-12 min-w-[44px] min-h-[44px] flex items-center justify-center transition-colors rounded-lg ${
+                showBlurredNav ? "text-charcoal hover:bg-charcoal/5" : "text-white hover:bg-white/10"
               }`}
               style={{
                 color: showBlurredNav ? "var(--charcoal)" : "white"
@@ -156,7 +155,7 @@ export default function Navigation() {
                 >
                   <Link
                     href={link.href}
-                    className={`text-3xl font-display tracking-tight transition-colors ${
+                    className={`text-3xl font-display tracking-tight transition-colors min-h-[44px] min-w-[44px] flex items-center ${
                       pathname === link.href
                         ? "text-aged-brass"
                         : "text-charcoal hover:text-aged-brass"
@@ -177,7 +176,7 @@ export default function Navigation() {
               >
                 <Link
                   href="/kontakt"
-                  className="flex items-center gap-2 px-6 py-3 bg-charcoal text-warm-white text-sm tracking-wider hover:bg-deep-forest transition-all"
+                  className="flex items-center justify-center gap-2 px-6 py-4 min-h-[44px] min-w-[44px] bg-charcoal text-warm-white text-sm tracking-wider hover:bg-deep-forest transition-all"
                   style={{
                     backgroundColor: "var(--charcoal)",
                     color: "var(--warm-white)"

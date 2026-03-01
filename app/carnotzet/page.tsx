@@ -76,10 +76,10 @@ export default function CarnotzetPage() {
             </p>
             <Link
               href="#reservation"
-              className="btn"
+              className="btn min-h-[44px] min-w-[44px]"
               style={{
-                backgroundColor: "var(--aged-brass)",
-                color: "white"
+                backgroundColor: "var(--charcoal)",
+                color: "var(--warm-white)"
               }}
             >
               Voranmeldung & Anfrage
@@ -347,7 +347,7 @@ export default function CarnotzetPage() {
 
             <button
               type="submit"
-              className="btn w-full"
+              className="btn w-full min-h-[44px]"
               style={{
                 backgroundColor: "var(--aged-brass)",
                 color: "white"
@@ -383,7 +383,7 @@ export default function CarnotzetPage() {
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link
               href="/dorfladen"
-              className="btn"
+              className="btn min-h-[44px] min-w-[44px]"
               style={{
                 backgroundColor: "transparent",
                 borderColor: "rgba(255,255,255,0.3)",
@@ -395,7 +395,7 @@ export default function CarnotzetPage() {
             </Link>
             <Link
               href="/bistro"
-              className="btn"
+              className="btn min-h-[44px] min-w-[44px]"
               style={{
                 backgroundColor: "var(--aged-brass)",
                 color: "white"
