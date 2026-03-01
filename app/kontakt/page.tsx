@@ -1,235 +1,348 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { motion } from "framer-motion";
+import { motion, useScroll, useTransform, useSpring } from "framer-motion";
+import { useRef, useState } from "react";
 import Link from "next/link";
-import { MapPin, Phone, Mail, Train, CableCar, Footprints, ArrowRight } from "lucide-react";
-import ContactForm from "@/components/ContactForm";
+import GlobalFooter from "@/components/GlobalFooter";
 
-const steps = [
-  { icon: Train, title: "Stechelberg", desc: "Auto oder Bus bis Stechelberg, Talstation" },
-  { icon: CableCar, title: "Luftseilbahn", desc: "4 Minuten nach Mürren hochfahren" },
-  { icon: Footprints, title: "Mürren Dorf", desc: "5 Minuten zu Fuss durch das Dorf" },
-  { icon: MapPin, title: "Alti Metzg", desc: "Zaun 990B – direkt im Dorfzentrum" },
-];
-
-const hours = [
-  { day: "Montag", time: "Ruhetag", closed: true },
-  { day: "Dienstag", time: "08:00–18:45" },
-  { day: "Mittwoch", time: "08:00–18:45" },
-  { day: "Donnerstag", time: "08:00–18:45" },
-  { day: "Freitag", time: "08:00–19:15" },
-  { day: "Samstag", time: "08:00–19:15" },
-  { day: "Sonntag", time: "08:00–18:45" },
-];
-
-const revealVariants = {
-  hidden: { opacity: 0, y: 30 },
-  visible: { opacity: 1, y: 0 },
-};
-
-function OpeningHours() {
-  const [currentDayIndex, setCurrentDayIndex] = useState<number | null>(null);
-
-  useEffect(() => {
-    const today = new Date().getDay(); // 0 = Sunday, 1 = Monday, etc.
-    // Convert to our index: Sunday = 6, Monday = 0, Tuesday = 1, etc.
-    const index = today === 0 ? 6 : today - 1;
-    setCurrentDayIndex(index);
-  }, []);
-
-  return (
-    <div className="space-y-3">
-      {hours.map((hour, index) => {
-        const isToday = index === currentDayIndex;
-        return (
-          <div
-            key={hour.day}
-            className={`flex justify-between py-2 ${isToday ? "font-medium" : ""}`}
-            style={{
-              color: isToday ? "var(--charcoal)" : "rgba(30,30,28,0.7)",
-              backgroundColor: isToday ? "rgba(176,141,87,0.1)" : undefined
-            }}
-          >
-            <span className="body-md">{hour.day}</span>
-            <span className="body-sm">{hour.time}</span>
-          </div>
-        );
-      })}
-    </div>
-  );
-}
+const colors = { charcoal: "#0F0E0C", brass: "#B08D57", white: "#FFFFFF", stone: "#F6F4F1" };
 
 export default function KontaktPage() {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [formState, setFormState] = useState({ name: "", email: "", message: "" });
+
+  const { scrollYProgress } = useScroll({ target: containerRef, offset: ["start start", "end start"] });
+  const y = useTransform(scrollYProgress, [0, 1], ["0%", "30%"]);
+  const scale = useSpring(useTransform(scrollYProgress, [0, 0.5], [1, 0.95]), { stiffness: 80, damping: 20 });
+
+  const letters = "KONTAKT".split("");
+
   return (
     <>
-      {/* Header - Dark */}
-      <section className="section-charcoal section-padding-md">
-        <div className="container-narrow container-padding text-center">
-          <motion.h1
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1 }}
-            className="section-title mb-4"
-          >
-            Komm vorbei.
-          </motion.h1>
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2 }}
-            className="body-lg opacity-70"
-          >
-            Wir freuen uns auf Dich.
-          </motion.p>
-        </div>
-      </section>
+      <div ref={containerRef} style={{ background: colors.charcoal, minHeight: "100vh", position: "relative", overflow: "hidden" }}>
+        {/* Animated Background Elements */}
+        <motion.div
+          animate={{ rotate: 360 }}
+          transition={{ duration: 60, repeat: Infinity, ease: "linear" }}
+          style={{
+            position: "absolute",
+            width: "800px",
+            height: "800px",
+            background: "radial-gradient(circle, rgba(176,141,87,0.05) 0%, transparent 70%)",
+            borderRadius: "50%",
+            top: "-300px",
+            right: "-200px",
+            pointerEvents: "none"
+          }}
+        />
+        <motion.div
+          animate={{ rotate: -360 }}
+          transition={{ duration: 80, repeat: Infinity, ease: "linear" }}
+          style={{
+            position: "absolute",
+            width: "600px",
+            height: "600px",
+            background: "radial-gradient(circle, rgba(176,141,87,0.03) 0%, transparent 70%)",
+            borderRadius: "50%",
+            bottom: "-200px",
+            left: "-100px",
+            pointerEvents: "none"
+          }}
+        />
 
-      {/* ANFAHRT - Timeline */}
-      <section className="section-warm-white section-padding-lg">
-        <div className="container-max container-padding">
-          <motion.div
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            variants={revealVariants}
-            className="text-center mb-16"
-          >
-            <p className="eyebrow-brass mb-4">
-              Anfahrt
-            </p>
-            <h2 className="section-title" style={{ color: "var(--charcoal)" }}>
-              So findest Du uns
-            </h2>
-          </motion.div>
-
-          {/* Timeline */}
-          <div className="max-w-4xl mx-auto">
-            <div className="flex justify-between items-start relative">
-              {/* Line */}
-              <div className="absolute top-6 left-0 right-0 h-px" style={{ backgroundColor: "rgba(176,141,87,0.3)" }} />
-
-              {steps.map((step, i) => (
-                <motion.div
-                  key={step.title}
-                  initial="hidden"
-                  whileInView="visible"
-                  viewport={{ once: true }}
-                  variants={revealVariants}
-                  transition={{ delay: i * 0.1 }}
-                  className="relative flex-1 text-center px-2"
+        {/* Hero - Animated Letters */}
+        <section style={{ height: "100vh", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: "40px" }}>
+          <motion.div style={{ scale }} className="relative z-10 text-center">
+            <div style={{ display: "flex", gap: "4px", marginBottom: "32px", justifyContent: "center" }}>
+              {letters.map((letter, i) => (
+                <motion.span
+                  key={i}
+                  initial={{ opacity: 0, y: 50 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.8, delay: i * 0.05 }}
+                  style={{
+                    fontFamily: "Cormorant Garamond, Georgia, serif",
+                    fontSize: "clamp(72px, 15vw, 180px)",
+                    fontWeight: 300,
+                    color: colors.white,
+                    lineHeight: 0.8,
+                    display: "inline-block"
+                  }}
+                  whileHover={{ color: colors.brass, y: -10 }}
                 >
-                  <div className="w-3 h-3 rounded-full mx-auto mb-6 relative z-10" style={{ backgroundColor: "var(--aged-brass)" }} />
-                  <step.icon size={24} strokeWidth={1} className="mx-auto mb-3" style={{ color: "var(--charcoal)", opacity: 0.5 }} />
-                  <p className="body-md mb-1" style={{ color: "var(--charcoal)" }}>{step.title}</p>
-                  <p className="body-sm" style={{ color: "var(--charcoal)", opacity: 0.6 }}>{step.desc}</p>
-                </motion.div>
+                  {letter}
+                </motion.span>
               ))}
             </div>
-          </div>
-        </div>
-      </section>
 
-      {/* KONTAKT + FORM */}
-      <section className="section-warm-white section-padding-lg">
-        <div className="container-max container-padding">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
-            {/* Left - Contact Info */}
+            {/* Animated Coordinates */}
             <motion.div
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true }}
-              variants={revealVariants}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 1.2 }}
+              style={{ fontFamily: "JetBrains Mono, monospace", fontSize: "12px", color: colors.brass, letterSpacing: "0.2em" }}
             >
-              <h2 className="section-title mb-10" style={{ color: "var(--charcoal)" }}>
-                So erreichst Du uns
-              </h2>
+              LAT 46.5592° N · LON 7.8922° E · ALT 1'638 M
+            </motion.div>
+          </motion.div>
 
-              {/* Address */}
-              <a
-                href="https://www.google.com/maps/search/?api=1&query=Zaun+990B+3825+Mürren+Schweiz"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-start gap-4 mb-8 group"
+          {/* Scroll Indicator */}
+          <motion.div
+            animate={{ y: [0, 10, 0] }}
+            transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+            style={{ position: "absolute", bottom: "40px" }}
+          >
+            <div style={{ width: "1px", height: "60px", background: `linear-gradient(to bottom, transparent, ${colors.brass}, transparent)` }} />
+          </motion.div>
+        </section>
+
+        {/* Floating Contact Cards */}
+        <section style={{ padding: "120px 40px", position: "relative" }}>
+          <div style={{ maxWidth: "1400px", margin: "0 auto", display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: "40px" }}>
+            {[
+              { icon: "📍", title: "Mürren", subtitle: "Zaun 990B, 3825", desc: "Autofrei · 1'638 m ü.M." },
+              { icon: "📞", title: "Telefon", subtitle: "033 525 88 17", desc: "Mo–So 08:00–22:00" },
+              { icon: "✉️", title: "E-Mail", subtitle: "muh@alti-metzg.ch", desc: "Antwort binnen 24h" }
+            ].map((card, i) => (
+              <motion.div
+                key={i}
+                initial={{ opacity: 0, y: 60 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-100px" }}
+                transition={{ duration: 0.8, delay: i * 0.15 }}
+                whileHover={{ y: -10, scale: 1.02 }}
+                style={{
+                  background: "rgba(255,255,255,0.03)",
+                  border: "1px solid rgba(255,255,255,0.06)",
+                  borderRadius: "24px",
+                  padding: "48px 32px",
+                  backdropFilter: "blur(20px)",
+                  cursor: "pointer",
+                  transition: "all 0.4s cubic-bezier(0.23, 1, 0.32, 1)"
+                }}
               >
-                <MapPin size={20} className="mt-1 shrink-0" strokeWidth={1} style={{ color: "var(--aged-brass)" }} />
-                <div>
-                  <p className="body-xs mb-1" style={{ color: "var(--charcoal)", opacity: 0.6 }}>Adresse</p>
-                  <p className="section-title mb-1 group-hover:text-aged-brass transition-colors" style={{ color: "var(--charcoal)" }}>
-                    Zaun 990B
-                  </p>
-                  <p className="body-md" style={{ color: "var(--charcoal)", opacity: 0.7 }}>3825 Mürren, Schweiz</p>
-                </div>
-              </a>
+                <motion.span
+                  animate={{ rotate: [0, 5, -5, 0] }}
+                  transition={{ duration: 4, repeat: Infinity, delay: i * 0.5 }}
+                  style={{ fontSize: "48px", display: "block", marginBottom: "24px" }}
+                >
+                  {card.icon}
+                </motion.span>
+                <h3 style={{ fontFamily: "Cormorant Garamond, Georgia, serif", fontSize: "28px", color: colors.white, marginBottom: "8px" }}>{card.title}</h3>
+                <p style={{ fontFamily: "Inter, system-ui, sans-serif", fontSize: "18px", color: colors.brass, marginBottom: "12px" }}>{card.subtitle}</p>
+                <p style={{ fontFamily: "Inter, system-ui, sans-serif", fontSize: "13px", color: "rgba(255,255,255,0.4)" }}>{card.desc}</p>
+              </motion.div>
+            ))}
+          </div>
+        </section>
 
-              {/* Phone */}
-              <a href="tel:+41335258817" className="flex items-center gap-4 mb-8 group">
-                <Phone size={20} className="shrink-0" strokeWidth={1} style={{ color: "var(--aged-brass)" }} />
-                <div>
-                  <p className="body-xs mb-1" style={{ color: "var(--charcoal)", opacity: 0.6 }}>Telefon</p>
-                  <p className="section-title group-hover:text-aged-brass transition-colors" style={{ color: "var(--charcoal)" }}>
-                    033 525 88 17
-                  </p>
-                </div>
-              </a>
-
-              {/* Email */}
-              <a href="mailto:muh@alti-metzg.ch" className="flex items-center gap-4 mb-12 group">
-                <Mail size={20} className="shrink-0" strokeWidth={1} style={{ color: "var(--aged-brass)" }} />
-                <div>
-                  <p className="body-xs mb-1" style={{ color: "var(--charcoal)", opacity: 0.6 }}>E-Mail</p>
-                  <p className="section-title group-hover:text-aged-brass transition-colors" style={{ color: "var(--charcoal)" }}>
-                    muh@alti-metzg.ch
-                  </p>
-                </div>
-              </a>
-
-              {/* Opening Hours */}
-              <div>
-                <p className="eyebrow mb-6">Öffnungszeiten</p>
-                <OpeningHours />
-              </div>
+        {/* Interactive Form - Split Layout */}
+        <section style={{ padding: "100px 40px", background: "linear-gradient(180deg, transparent 0%, rgba(176,141,87,0.05) 100%)" }}>
+          <div style={{ maxWidth: "1200px", margin: "0 auto", display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(350px, 1fr))", gap: "80px", alignItems: "center" }}>
+            {/* Left - Text */}
+            <motion.div
+              initial={{ opacity: 0, x: -50 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8 }}
+            >
+              <motion.p
+                initial={{ opacity: 0, letterSpacing: "0.05em" }}
+                whileInView={{ opacity: 1, letterSpacing: "0.3em" }}
+                viewport={{ once: true }}
+                style={{
+                  fontFamily: "Inter, system-ui, sans-serif",
+                  fontSize: "11px",
+                  textTransform: "uppercase",
+                  color: colors.brass,
+                  marginBottom: "24px",
+                  letterSpacing: "0.3em"
+                }}
+              >
+                Schreib uns
+              </motion.p>
+              <h2 style={{ fontFamily: "Cormorant Garamond, Georgia, serif", fontSize: "clamp(40px, 6vw, 64px)", color: colors.white, fontWeight: 300, lineHeight: 1.1, marginBottom: "32px" }}>
+                Haben wir<br /><span style={{ color: colors.brass }}>verpasst?</span>
+              </h2>
+              <p style={{ fontFamily: "Inter, system-ui, sans-serif", fontSize: "16px", color: "rgba(255,255,255,0.6)", lineHeight: 1.8 }}>
+                Frag alles. Wir antworten. Ehrlich. Persönlich. Binnen 24 Stunden.
+              </p>
             </motion.div>
 
             {/* Right - Form */}
             <motion.div
-              initial="hidden"
-              whileInView="visible"
+              initial={{ opacity: 0, x: 50 }}
+              whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
-              variants={revealVariants}
+              transition={{ duration: 0.8, delay: 0.2 }}
+              style={{ display: "flex", flexDirection: "column", gap: "20px" }}
             >
-              <h2 className="section-title mb-10" style={{ color: "var(--charcoal)" }}>
-                Nachricht senden
-              </h2>
-              <ContactForm />
+              {[
+                { label: "Dein Name", key: "name" },
+                { label: "E-Mail", key: "email" }
+              ].map((field) => (
+                <motion.div
+                  key={field.key}
+                  whileFocus={{ scale: 1.02 }}
+                  style={{ position: "relative" }}
+                >
+                  <input
+                    type={field.key === "email" ? "email" : "text"}
+                    placeholder=" "
+                    value={formState[field.key as keyof typeof formState]}
+                    onChange={(e) => setFormState({ ...formState, [field.key]: e.target.value })}
+                    style={{
+                      width: "100%",
+                      padding: "24px 20px 8px",
+                      background: "rgba(255,255,255,0.05)",
+                      border: "1px solid rgba(255,255,255,0.1)",
+                      borderRadius: "0",
+                      outline: "none",
+                      color: colors.white,
+                      fontFamily: "Inter, system-ui, sans-serif",
+                      fontSize: "14px",
+                      transition: "all 0.3s ease"
+                    }}
+                  />
+                  <motion.label
+                    initial={{ y: 0, opacity: 0.5 }}
+                    animate={{
+                      y: formState[field.key as keyof typeof formState] ? -8 : 0,
+                      opacity: formState[field.key as keyof typeof formState] ? 0.7 : 0.4
+                    }}
+                    style={{
+                      position: "absolute",
+                      left: "20px",
+                      top: "20px",
+                      fontFamily: "Inter, system-ui, sans-serif",
+                      fontSize: "11px",
+                      letterSpacing: "0.15em",
+                      textTransform: "uppercase",
+                      color: colors.brass,
+                      pointerEvents: "none"
+                    }}
+                  >
+                    {field.label}
+                  </motion.label>
+                </motion.div>
+              ))}
+
+              <motion.div whileFocus={{ scale: 1.02 }} style={{ position: "relative" }}>
+                <textarea
+                  placeholder=" "
+                  value={formState.message}
+                  onChange={(e) => setFormState({ ...formState, message: e.target.value })}
+                  rows={4}
+                  style={{
+                    width: "100%",
+                    padding: "24px 20px 8px",
+                    background: "rgba(255,255,255,0.05)",
+                    border: "1px solid rgba(255,255,255,0.1)",
+                    borderRadius: "0",
+                    outline: "none",
+                    color: colors.white,
+                    fontFamily: "Inter, system-ui, sans-serif",
+                    fontSize: "14px",
+                    resize: "none",
+                    transition: "all 0.3s ease"
+                  }}
+                />
+                <motion.label
+                  initial={{ y: 0, opacity: 0.5 }}
+                  animate={{
+                    y: formState.message ? -8 : 0,
+                    opacity: formState.message ? 0.7 : 0.4
+                  }}
+                  style={{
+                    position: "absolute",
+                    left: "20px",
+                    top: "20px",
+                    fontFamily: "Inter, system-ui, sans-serif",
+                    fontSize: "11px",
+                    letterSpacing: "0.15em",
+                    textTransform: "uppercase",
+                    color: colors.brass,
+                    pointerEvents: "none"
+                  }}
+                >
+                  Deine Nachricht
+                </motion.label>
+              </motion.div>
+
+              <motion.button
+                whileHover={{ scale: 1.02, backgroundColor: colors.brass }}
+                whileTap={{ scale: 0.98 }}
+                style={{
+                  width: "100%",
+                  padding: "20px 32px",
+                  background: "transparent",
+                  border: "1px solid colors.brass",
+                  color: colors.white,
+                  fontFamily: "Inter, system-ui, sans-serif",
+                  fontSize: "13px",
+                  letterSpacing: "0.15em",
+                  textTransform: "uppercase",
+                  cursor: "pointer",
+                  transition: "all 0.3s ease",
+                  position: "relative",
+                  overflow: "hidden"
+                }}
+              >
+                Senden
+                <motion.span
+                  initial={{ x: "-100%" }}
+                  whileHover={{ x: "100%" }}
+                  transition={{ duration: 0.5 }}
+                  style={{
+                    position: "absolute",
+                    inset: 0,
+                    background: "linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent)",
+                    pointerEvents: "none"
+                  }}
+                />
+              </motion.button>
             </motion.div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* MAP */}
-      <section className="section-warm-white section-padding-md">
-        <div className="container-max container-padding">
-          <a
-            href="https://www.google.com/maps/search/?api=1&query=Zaun+990B+3825+Mürren+Schweiz"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="block relative aspect-video overflow-hidden group cursor-pointer border border-charcoal/10"
-            style={{ borderColor: "rgba(30,30,28,0.1)" }}
-          >
+        {/* Parallax Map Section */}
+        <section style={{ position: "relative", height: "70vh", overflow: "hidden" }}>
+          <motion.div style={{ y, position: "absolute", inset: 0 }}>
             <iframe
-              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2723.1474!2d7.9073!3d46.5585!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47859071640616b3%3A0xc5f3d7f0e3b7c5a5!2sZaun%20990B%2C%203825%20M%C3%BCrren%2C%20Switzerland!5e0!3m2!1sen!2sus!4v1700000000000"
+              src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d10981.5!2d7.8922!3d46.5592!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x478fa57ebb54f74b%3A0x7e3a5a0c2c4b7e8a!2sMurren%2C+Switzerland!5e0!3m2!1sde!2sch!4v1709123456789"
               width="100%"
               height="100%"
-              style={{ border: 0 }}
+              style={{ border: "none", filter: "grayscale(100%) invert(1) contrast(1.1)" }}
               allowFullScreen
               loading="lazy"
-              referrerPolicy="no-referrer-when-downgrade"
             />
-            <div className="absolute inset-0 bg-transparent group-hover:bg-charcoal/5 transition-colors pointer-events-none" />
-          </a>
-        </div>
-      </section>
+          </motion.div>
+
+          {/* Floating Overlay */}
+          <motion.div
+            initial={{ y: 100, opacity: 0 }}
+            whileInView={{ y: 0, opacity: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8 }}
+            style={{
+              position: "absolute",
+              bottom: "60px",
+              left: "50%",
+              transform: "translateX(-50%)",
+              background: "rgba(15,14,12,0.9)",
+              padding: "24px 48px",
+              borderRadius: "50px",
+              backdropFilter: "blur(20px)",
+              border: "1px solid rgba(255,255,255,0.1)",
+              textAlign: "center"
+            }}
+          >
+            <p style={{ fontFamily: "Inter, system-ui, sans-serif", fontSize: "11px", letterSpacing: "0.2em", textTransform: "uppercase", color: colors.brass, marginBottom: "8px" }}>So kommst du zu uns</p>
+            <p style={{ fontFamily: "Cormorant Garamond, Georgia, serif", fontSize: "20px", color: colors.white }}>Stechelberg → Seilbahn → Mürren</p>
+          </motion.div>
+        </section>
+      </div>
+      <GlobalFooter />
     </>
   );
 }
