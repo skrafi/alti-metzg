@@ -31,15 +31,15 @@ export default function PageHero({
         <div
           className={`absolute inset-0 ${
             dark
-              ? "bg-gradient-to-t from-contrast/80 via-contrast/40 to-contrast/20"
-              : "bg-gradient-to-t from-contrast/60 via-contrast/30 to-transparent"
+              ? "bg-gradient-to-t from-charcoal/80 via-charcoal/40 to-charcoal/20"
+              : "bg-gradient-to-t from-charcoal/60 via-charcoal/30 to-transparent"
           }`}
         />
       </div>
 
       {/* Content */}
       <div className="relative h-full flex flex-col items-center justify-center text-center px-6">
-        <h1 className="font-heading text-4xl md:text-6xl lg:text-7xl text-secondary tracking-tight">
+        <h1 className="font-heading text-4xl md:text-6xl lg:text-7xl text-white tracking-tight">
           {title}
         </h1>
       </div>

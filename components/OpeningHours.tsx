@@ -17,53 +17,61 @@ const hours = [
 ];
 
 export default function OpeningHours({ compact = false }: OpeningHoursProps) {
-  // Get current day (0 = Sunday, 1 = Monday, etc.)
   const today = new Date().getDay();
-  const todayIndex = today === 0 ? 6 : today - 1; // Convert to Monday-first order
+  const todayIndex = today === 0 ? 6 : today - 1;
 
   if (compact) {
-    // Compact version for home page
     const todayHours = hours[todayIndex];
     return (
-      <div className="text-center">
-        <p className="text-sm text-contrast/70">
+      <div className="inline-flex items-center gap-3 px-4 py-2 bg-forest/10 border border-forest/20">
+        <span className="w-2 h-2 bg-forest-light rounded-full animate-pulse" />
+        <span className="text-sm font-medium text-charcoal">
           Heute:{" "}
-          <span className="text-contrast font-medium">
-            {todayHours.closed
-              ? "Ruhetag"
-              : `${todayHours.open} – ${todayHours.close}`}
-          </span>
-        </p>
+          {todayHours.closed ? (
+            <span className="text-charcoal/50">Ruhetag</span>
+          ) : (
+            <span className="text-forest font-semibold">
+              {todayHours.open} – {todayHours.close}
+            </span>
+          )}
+        </span>
       </div>
     );
   }
 
   return (
     <motion.div
-      initial={{ opacity: 0 }}
-      whileInView={{ opacity: 1 }}
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
-      className="space-y-3"
+      className="hours-grid"
     >
-      {hours.map((item, index) => (
-        <div
-          key={item.day}
-          className={`flex justify-between items-center py-2 ${
-            index === todayIndex
-              ? "text-accent font-medium"
-              : "text-contrast/70"
-          }`}
-        >
-          <span className="w-28">{item.day}</span>
-          <span className="text-right">
-            {item.closed ? (
-              <span className="text-muted italic">Ruhetag</span>
-            ) : (
-              `${item.open} – ${item.close}`
-            )}
-          </span>
-        </div>
-      ))}
+      {hours.map((item, index) => {
+        const isToday = index === todayIndex;
+        const isClosed = item.closed;
+
+        return (
+          <div
+            key={item.day}
+            className={`hours-row ${isToday ? "today" : ""} ${isClosed ? "closed" : ""}`}
+          >
+            <span className="font-medium flex items-center gap-2">
+              {isToday && <span className="w-2 h-2 bg-current rounded-full" />}
+              {item.day}
+              {isToday && <span className="text-xs opacity-80">(Heute)</span>}
+            </span>
+            <span className={`text-right ${isClosed ? "italic" : ""}`}>
+              {isClosed ? (
+                "Ruhetag"
+              ) : (
+                <span className="font-semibold">
+                  {item.open} – {item.close}
+                </span>
+              )}
+            </span>
+          </div>
+        );
+      })}
     </motion.div>
   );
 }

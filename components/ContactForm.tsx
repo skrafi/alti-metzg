@@ -69,7 +69,7 @@ export default function ContactForm() {
       <div>
         <label
           htmlFor="name"
-          className="block text-sm font-medium text-contrast mb-2"
+          className="block text-sm font-medium text-charcoal mb-2"
         >
           Name
         </label>
@@ -77,9 +77,7 @@ export default function ContactForm() {
           {...register("name")}
           type="text"
           id="name"
-          className={`w-full px-4 py-3 bg-secondary border rounded-sm focus:outline-none focus:ring-2 focus:ring-accent/50 transition-all ${
-            errors.name ? "border-red-400" : "border-muted"
-          }`}
+          className={errors.name ? "border-red-400 error" : ""}
           placeholder="Dein Name"
         />
         {errors.name && (
@@ -91,7 +89,7 @@ export default function ContactForm() {
       <div>
         <label
           htmlFor="email"
-          className="block text-sm font-medium text-contrast mb-2"
+          className="block text-sm font-medium text-charcoal mb-2"
         >
           E-Mail
         </label>
@@ -99,9 +97,7 @@ export default function ContactForm() {
           {...register("email")}
           type="email"
           id="email"
-          className={`w-full px-4 py-3 bg-secondary border rounded-sm focus:outline-none focus:ring-2 focus:ring-accent/50 transition-all ${
-            errors.email ? "border-red-400" : "border-muted"
-          }`}
+          className={errors.email ? "border-red-400 error" : ""}
           placeholder="deine@email.ch"
         />
         {errors.email && (
@@ -113,7 +109,7 @@ export default function ContactForm() {
       <div>
         <label
           htmlFor="message"
-          className="block text-sm font-medium text-contrast mb-2"
+          className="block text-sm font-medium text-charcoal mb-2"
         >
           Nachricht
         </label>
@@ -121,9 +117,7 @@ export default function ContactForm() {
           {...register("message")}
           id="message"
           rows={4}
-          className={`w-full px-4 py-3 bg-secondary border rounded-sm focus:outline-none focus:ring-2 focus:ring-accent/50 transition-all resize-none ${
-            errors.message ? "border-red-400" : "border-muted"
-          }`}
+          className={errors.message ? "border-red-400 error" : "resize-none"}
           placeholder="Deine Nachricht an uns..."
         />
         {errors.message && (
@@ -135,7 +129,7 @@ export default function ContactForm() {
       <button
         type="submit"
         disabled={isSubmitting}
-        className="w-full sm:w-auto px-8 py-3 bg-contrast text-secondary font-medium rounded-sm hover:bg-accent transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+        className="w-full sm:w-auto btn-primary disabled:opacity-50 disabled:cursor-not-allowed"
       >
         {isSubmitting ? (
           "Wird gesendet..."
@@ -152,7 +146,7 @@ export default function ContactForm() {
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
-          className="flex items-center gap-2 text-green-600"
+          className="flex items-center gap-2 text-forest"
         >
           <CheckCircle size={18} />
           <span>Vielen Dank! Deine Nachricht wurde gesendet.</span>

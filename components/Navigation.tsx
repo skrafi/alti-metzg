@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X } from "lucide-react";
@@ -22,19 +23,17 @@ export default function Navigation() {
 
   useEffect(() => {
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 50);
+      setIsScrolled(window.scrollY > 80);
     };
 
-    window.addEventListener("scroll", handleScroll);
+    window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // Close mobile menu on route change
   useEffect(() => {
     setIsMobileMenuOpen(false);
   }, [pathname]);
 
-  // Prevent body scroll when mobile menu is open
   useEffect(() => {
     if (isMobileMenuOpen) {
       document.body.style.overflow = "hidden";
@@ -44,54 +43,81 @@ export default function Navigation() {
   }, [isMobileMenuOpen]);
 
   const showSolidNav = !isHome || isScrolled;
+  const isDarkNav = !showSolidNav;
 
   return (
     <>
       <motion.nav
-        initial={{ y: -100 }}
-        animate={{ y: 0 }}
-        transition={{ duration: 0.6, ease: "easeOut" }}
-        className={`fixed top-0 left-0 right-0 z-50 h-[72px] transition-all duration-300 ${
-          showSolidNav
-            ? "bg-secondary/95 backdrop-blur-md shadow-sm"
-            : "bg-transparent"
+        initial={{ y: -100, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+        className={`fixed top-0 left-0 right-0 z-50 h-20 transition-all duration-500 ${
+          showSolidNav ? "nav-solid" : "nav-transparent"
         }`}
       >
         <div className="max-w-7xl mx-auto px-6 h-full flex items-center justify-between">
-          {/* Logo */}
+          {/* Logo - just text */}
           <Link
             href="/"
-            className={`font-heading text-2xl tracking-tight transition-colors duration-300 ${
-              showSolidNav ? "text-contrast" : "text-secondary"
-            }`}
+            className="group"
           >
-            Alti Metzg
+            <span className={`font-heading text-2xl tracking-tight transition-colors duration-500 ${
+              showSolidNav ? "text-charcoal" : "text-white"
+            }`}>
+              Alti Metzg
+            </span>
           </Link>
 
           {/* Desktop Navigation */}
-          <div className="hidden lg:flex items-center gap-8">
-            {navLinks.map((link) => (
-              <Link
+          <div className="hidden lg:flex items-center gap-10">
+            {navLinks.map((link, index) => (
+              <motion.div
                 key={link.href}
-                href={link.href}
-                className={`text-sm font-medium tracking-wide link-underline transition-colors duration-300 ${
-                  showSolidNav ? "text-contrast/80 hover:text-contrast" : "text-secondary/80 hover:text-secondary"
-                } ${pathname === link.href ? "text-accent" : ""}`}
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.1 * index, duration: 0.5 }}
               >
-                {link.label}
-              </Link>
+                <Link
+                  href={link.href}
+                  className={`relative text-sm font-semibold tracking-wide transition-colors duration-300 ${
+                    showSolidNav
+                      ? "text-charcoal/70 hover:text-charcoal"
+                      : "text-white/70 hover:text-white"
+                  } ${pathname === link.href ? (showSolidNav ? "!text-forest" : "!text-white") : ""}`}
+                >
+                  {link.label}
+                  {pathname === link.href && (
+                    <motion.span
+                      layoutId="nav-indicator"
+                      className={`absolute -bottom-2 left-0 right-0 h-px ${
+                        isDarkNav ? "bg-white/70" : "bg-stone"
+                      }`}
+                      style={{ textUnderlineOffset: "6px" }}
+                      initial={false}
+                      transition={{ duration: 0.3 }}
+                    />
+                  )}
+                </Link>
+              </motion.div>
             ))}
           </div>
 
           {/* Mobile Menu Button */}
           <button
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            className={`lg:hidden p-2 transition-colors duration-300 ${
-              showSolidNav ? "text-contrast" : "text-secondary"
+            className={`lg:hidden relative w-12 h-12 flex items-center justify-center rounded-full transition-all duration-300 ${
+              showSolidNav
+                ? "bg-forest/10 text-charcoal hover:bg-forest/20"
+                : "bg-white/10 text-white hover:bg-white/20"
             }`}
             aria-label={isMobileMenuOpen ? "Menü schliessen" : "Menü öffnen"}
           >
-            {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+            <motion.span
+              animate={{ rotate: isMobileMenuOpen ? 90 : 0 }}
+              transition={{ duration: 0.3 }}
+            >
+              {isMobileMenuOpen ? <X size={22} /> : <Menu size={22} />}
+            </motion.span>
           </button>
         </div>
       </motion.nav>
@@ -103,28 +129,46 @@ export default function Navigation() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.3 }}
-            className="fixed inset-0 z-40 bg-secondary lg:hidden"
+            transition={{ duration: 0.4 }}
+            className="fixed inset-0 z-40 lg:hidden"
           >
-            <div className="flex flex-col items-center justify-center h-full gap-8 pt-[72px]">
+            {/* Backdrop */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="absolute inset-0 bg-charcoal/80 backdrop-blur-xl"
+              onClick={() => setIsMobileMenuOpen(false)}
+            />
+
+            {/* Menu Content */}
+            <motion.div
+              initial={{ opacity: 0, y: 40 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 40 }}
+              transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+              className="relative h-full flex flex-col items-center justify-center gap-6"
+            >
               {navLinks.map((link, index) => (
                 <motion.div
                   key={link.href}
-                  initial={{ opacity: 0, y: 20 }}
+                  initial={{ opacity: 0, y: 30 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: index * 0.1 }}
+                  transition={{ delay: 0.1 + index * 0.08, duration: 0.5 }}
                 >
                   <Link
                     href={link.href}
-                    className={`text-3xl font-heading ${
-                      pathname === link.href ? "text-accent" : "text-contrast"
+                    className={`text-4xl font-heading transition-colors ${
+                      pathname === link.href
+                        ? "text-white"
+                        : "text-white/60 hover:text-white"
                     }`}
                   >
                     {link.label}
                   </Link>
                 </motion.div>
               ))}
-            </div>
+            </motion.div>
           </motion.div>
         )}
       </AnimatePresence>
