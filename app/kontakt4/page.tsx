@@ -20,6 +20,7 @@ export default function Kontakt4Page() {
 
   const scale = useTransform(scrollYProgress, [0, 1], [1, 0.8]);
   const opacity = useTransform(scrollYProgress, [0, 0.3], [1, 0]);
+  const rotate = useTransform(scrollYProgress, [0, 1], [0, 360]);
 
   return (
     <div ref={containerRef} style={{ background: colors.white, minHeight: "100vh", overflow: "hidden" }}>
@@ -27,9 +28,8 @@ export default function Kontakt4Page() {
       <motion.div style={{ scale, opacity, position: "fixed", inset: 0, zIndex: -1 }}>
         <div style={{ width: "100%", height: "100%", background: colors.stone, display: "flex", alignItems: "center", justifyContent: "center" }}>
           <motion.h1
-            animate={{ rotate: scrollProgress.get() * 360 }}
-            transition={{ type: "spring", stiffness: 100 }}
             style={{
+              rotate,
               fontFamily: "Cormorant Garamond, Georgia, serif",
               fontSize: "clamp(80px, 20vw, 200px)",
               color: "rgba(15,14,12,0.03)",
