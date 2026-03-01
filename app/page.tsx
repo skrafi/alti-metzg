@@ -8,32 +8,26 @@ import GlobalFooter from "@/components/GlobalFooter";
 const panels = [
   {
     href: "/dorfladen",
-    imageSrc: "/images/dorfladen-hero.jpg",
-    imagePlaceholderColor: "#D4CFC8",
     number: "01",
     eyebrow: "LOKALE PRODUKTE",
     title: "Der\nDorfladen.",
-    body: "Frisches Brot, regionaler Käse, saisonales Gemüse — alles von Produzenten die wir kennen.",
+    body: "Frisches Brot, regionaler Käse, saisonales Gemüse — direkt vom Produzenten.",
     cta: "Sortiment entdecken"
   },
   {
     href: "/bistro",
-    imageSrc: "/images/bistro-hero.jpg",
-    imagePlaceholderColor: "#C8C3BC",
     number: "02",
     eyebrow: "SAISONALE KÜCHE",
     title: "Das\nBistro.",
-    body: "Mittagstisch und Abendessen. Saisonal, ehrlich, mit Blick auf die Alpen.",
+    body: "Saisonal, ehrlich, mit Blick auf die Alpen. Mittag und Abend.",
     cta: "Speisekarte ansehen"
   },
   {
     href: "/carnotzet",
-    imageSrc: "/images/carnotzet-hero.jpg",
-    imagePlaceholderColor: "#BDB8B0",
     number: "03",
     eyebrow: "DER KELLER",
     title: "Das\nCarnotzet.",
-    body: "Natursteinwände, regionale Weine, gute Gesellschaft. Der gemütlichste Keller in Mürren.",
+    body: "Regionale Weine, Naturstein, gute Gesellschaft. Der schönste Keller in Mürren.",
     cta: "Tisch reservieren"
   }
 ];
@@ -108,10 +102,10 @@ export default function Home() {
               style={{
                 position: "absolute",
                 inset: 0,
-                backgroundImage: `url('${panel.imageSrc}')`,
+                backgroundImage: `url('/images/${i === 0 ? "dorfladen-hero.jpg" : i === 1 ? "bistro-hero.jpg" : "carnotzet-hero.jpg"}')`,
                 backgroundSize: "cover",
                 backgroundPosition: "center",
-                backgroundColor: panel.imagePlaceholderColor,
+                backgroundColor: i === 0 ? "#2A2520" : i === 1 ? "#1E1E1C" : "#1A2018",
                 transition: "transform 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94)"
               }}
             />
@@ -135,9 +129,9 @@ export default function Home() {
                 top: "32px",
                 left: "32px",
                 fontFamily: "var(--font-display)",
-                fontSize: "72px",
+                fontSize: "64px",
                 fontWeight: 300,
-                color: "rgba(255,255,255,0.12)",
+                color: "rgba(255,255,255,0.07)",
                 lineHeight: 1,
                 userSelect: "none"
               }}
@@ -149,10 +143,11 @@ export default function Home() {
             <div
               style={{
                 position: "absolute",
-                bottom: "48px",
+                bottom: "52px",
                 left: "40px",
                 right: "40px",
-                zIndex: 2
+                zIndex: 2,
+                paddingBottom: "0"
               }}
             >
               {/* Eyebrow */}
@@ -174,7 +169,7 @@ export default function Home() {
               <h2
                 style={{
                   fontFamily: "var(--font-display)",
-                  fontSize: "clamp(40px, 3.5vw, 60px)",
+                  fontSize: "clamp(36px, 3vw, 52px)",
                   fontWeight: 300,
                   fontStyle: "italic",
                   lineHeight: 0.92,
