@@ -15,7 +15,6 @@ const schema = z.object({
 
 type FormData = z.infer<typeof schema>;
 
-// Replace with your Formspree form ID
 const FORMSPREE_ENDPOINT = "https://formspree.io/f/xpwzgvqk";
 
 export default function ContactForm() {
@@ -38,9 +37,7 @@ export default function ContactForm() {
     try {
       const response = await fetch(FORMSPREE_ENDPOINT, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data),
       });
 
@@ -63,77 +60,54 @@ export default function ContactForm() {
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       onSubmit={handleSubmit(onSubmit)}
-      className="space-y-6"
+      className="space-y-8"
     >
-      {/* Name Field */}
+      {/* Name */}
       <div>
-        <label
-          htmlFor="name"
-          className="block text-sm font-medium text-charcoal mb-2"
-        >
-          Name
-        </label>
+        <label htmlFor="name" className="label-copper">Name</label>
         <input
           {...register("name")}
           type="text"
           id="name"
-          className={errors.name ? "border-red-400 error" : ""}
+          className={`input-underline ${errors.name ? "border-red-400" : ""}`}
           placeholder="Dein Name"
         />
-        {errors.name && (
-          <p className="mt-1 text-sm text-red-500">{errors.name.message}</p>
-        )}
+        {errors.name && <p className="text-red-500 text-sm mt-1">{errors.name.message}</p>}
       </div>
 
-      {/* Email Field */}
+      {/* Email */}
       <div>
-        <label
-          htmlFor="email"
-          className="block text-sm font-medium text-charcoal mb-2"
-        >
-          E-Mail
-        </label>
+        <label htmlFor="email" className="label-copper">E-Mail</label>
         <input
           {...register("email")}
           type="email"
           id="email"
-          className={errors.email ? "border-red-400 error" : ""}
+          className={`input-underline ${errors.email ? "border-red-400" : ""}`}
           placeholder="deine@email.ch"
         />
-        {errors.email && (
-          <p className="mt-1 text-sm text-red-500">{errors.email.message}</p>
-        )}
+        {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email.message}</p>}
       </div>
 
-      {/* Message Field */}
+      {/* Message */}
       <div>
-        <label
-          htmlFor="message"
-          className="block text-sm font-medium text-charcoal mb-2"
-        >
-          Nachricht
-        </label>
+        <label htmlFor="message" className="label-copper">Nachricht</label>
         <textarea
           {...register("message")}
           id="message"
           rows={4}
-          className={errors.message ? "border-red-400 error" : "resize-none"}
+          className={`input-underline resize-none ${errors.message ? "border-red-400" : ""}`}
           placeholder="Deine Nachricht an uns..."
         />
-        {errors.message && (
-          <p className="mt-1 text-sm text-red-500">{errors.message.message}</p>
-        )}
+        {errors.message && <p className="text-red-500 text-sm mt-1">{errors.message.message}</p>}
       </div>
 
-      {/* Submit Button */}
+      {/* Submit */}
       <button
         type="submit"
         disabled={isSubmitting}
-        className="w-full sm:w-auto btn-primary disabled:opacity-50 disabled:cursor-not-allowed"
+        className="btn btn-primary w-full justify-center disabled:opacity-50"
       >
-        {isSubmitting ? (
-          "Wird gesendet..."
-        ) : (
+        {isSubmitting ? "Wird gesendet..." : (
           <>
             Nachricht senden
             <Send size={16} />
@@ -141,12 +115,12 @@ export default function ContactForm() {
         )}
       </button>
 
-      {/* Status Messages */}
+      {/* Status */}
       {submitStatus === "success" && (
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
-          className="flex items-center gap-2 text-forest"
+          className="flex items-center gap-2 text-copper"
         >
           <CheckCircle size={18} />
           <span>Vielen Dank! Deine Nachricht wurde gesendet.</span>

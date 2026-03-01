@@ -1,221 +1,260 @@
-import PageHero from "@/components/PageHero";
-import Section from "@/components/Section";
-import BackgroundText from "@/components/BackgroundText";
+"use client";
+
+import { motion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight, Heart, MapPin, Clock } from "lucide-react";
-import type { Metadata } from "next";
+import { ArrowRight } from "lucide-react";
 
-export const metadata: Metadata = {
-  title: "Über uns",
-  description: "Die Geschichte der Alti Metzg – von der alten Metzgerei zum Dorfladen, Bistro und Carnotzet in Mürren.",
+const timeline = [
+  {
+    label: "Früher",
+    year: "",
+    title: "Alte Metzgerei",
+    desc: "Ein traditioneller Ort im Herzen von Mürren. Fleisch und Wurstwaren nach alter Tradition.",
+    image: "/images/old-butcher.jpg",
+  },
+  {
+    label: "Die Idee",
+    year: "2021",
+    title: "Neubeginn",
+    desc: "Die Vision eines Dorfladens mit Bistro – ein Ort für Einheimische und Gäste.",
+    image: "/images/renovation.jpg",
+  },
+  {
+    label: "Heute",
+    year: "",
+    title: "Drei Welten",
+    desc: "Dorfladen, Bistro und Carnotzet unter einem Dach. Verwurzelt in Mürren.",
+    image: "/images/team-photo.jpg",
+  },
+];
+
+const team = [
+  { name: "Name Nachname", role: "Geschäftsführung" },
+  { name: "Name Nachname", role: "Küche" },
+  { name: "Name Nachname", role: "Laden" },
+];
+
+const revealVariants = {
+  hidden: { opacity: 0, y: 30 },
+  visible: { opacity: 1, y: 0 },
 };
 
 export default function UeberUnsPage() {
   return (
     <>
-      <PageHero
-        title="Über uns"
-        imageSrc="/images/bistro-interior.jpg"
-        imageAlt="Das Team der Alti Metzg"
-      />
-
-      {/* Story */}
-      <Section>
-        <div className="max-w-3xl mx-auto">
-          <h2 className="font-heading text-3xl md:text-4xl text-charcoal mb-8 text-center">
-            Die Geschichte der Alti Metzg
-          </h2>
-          <div className="prose prose-lg text-charcoal/80 mx-auto space-y-6">
-            <p>
-              &ldquo;Alti Metzg&rdquo; bedeutet auf Schweizerdeutsch &ldquo;alte
-              Metzgerei&rdquo;. Und genau das war dieser Ort einst: eine
-              traditionelle Metzgerei im Herzen von Mürren, wo die Einwohner
-              ihr Fleisch kauften und sich trafen.
-            </p>
-            <p>
-              Als die Metzgerei schloss, blieb der Ort nicht leer. Die Idee war
-              geboren: einen Dorfladen zu eröffnen, der die Lücke füllt und
-              gleichzeitig etwas Neues schafft. Ein Ort für die Gemeinde, mit
-              lokalen Produkten und persönlichem Service.
-            </p>
-            <p>
-              Heute ist die Alti Metzg drei Dinge zugleich: ein Dorfladen mit
-              regionalen Produkten, ein kleines Bistro mit saisonaler Küche
-              und ein gemütliches Carnotzet im ehemaligen Keller. Alles
-              verbunden durch die Philosophie von Regionalität, Nachhaltigkeit
-              und Gemeinschaft.
-            </p>
-          </div>
+      {/* Header - Light */}
+      <section className="section-warm-white section-padding-md">
+        <div className="container-narrow container-padding text-center">
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="eyebrow-brass mb-6"
+          >
+            Über uns
+          </motion.p>
+          <motion.h1
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 1 }}
+            className="display-hero mb-8"
+            style={{ color: "var(--charcoal)" }}
+          >
+            Wir sind
+          </motion.h1>
+          <motion.h1
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 1, delay: 0.2 }}
+            className="display-hero"
+            style={{ color: "var(--aged-brass)", fontWeight: 500 }}
+          >
+            Alti Metzg.
+          </motion.h1>
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.4 }}
+            className="body-lg mt-8"
+            style={{ color: "var(--charcoal)", opacity: 0.85 }}
+          >
+            Wo einst eine alte Metzgerei war, erwartet Dich heute ein Dorfladen,
+            Bistro und Carnotzet in Mürren.
+          </motion.p>
         </div>
-      </Section>
+      </section>
 
-      {/* Timeline / Images */}
-      <Section className="!py-0">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div className="aspect-video bg-stone-light/50  flex items-center justify-center">
-            <span className="text-charcoal/30 text-sm">old-butchery.jpg</span>
-          </div>
-          <div className="aspect-video bg-stone-light/50  flex items-center justify-center">
-            <span className="text-charcoal/30 text-sm">metzg-today.jpg</span>
-          </div>
-        </div>
-      </Section>
+      {/* GESCHICHTE - Timeline with images */}
+      <section className="section-warm-white">
+        {timeline.map((item, index) => (
+          <div
+            key={item.label}
+            className={`py-16 lg:py-24 ${index > 0 ? "border-t border-charcoal/10" : ""}`}
+            style={{
+              borderColor: index > 0 ? "rgba(30,30,28,0.1)" : undefined,
+              backgroundColor: index % 2 === 1 ? "rgba(206,200,190,0.15)" : undefined
+            }}
+          >
+            <div className="container-max container-padding">
+              <div className={`grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center ${
+                index % 2 === 1 ? "lg:grid-flow-col-dense" : ""
+              }`}>
+                {/* Image */}
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  whileInView={{ opacity: 1 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.8 }}
+                  className={`relative aspect-[4/3] overflow-hidden ${index % 2 === 1 ? "lg:col-start-2" : ""}`}
+                >
+                  <Image
+                    src={item.image}
+                    alt={item.title}
+                    fill
+                    className="object-cover"
+                    sizes="(max-width: 1024px) 100vw, 50vw"
+                  />
+                </motion.div>
 
-      {/* Values */}
-      <Section dark>
-        <div className="relative overflow-hidden">
-          <BackgroundText text="MÜRREN" className="top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-white" />
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center relative z-10">
-          <div>
-            <Heart className="mx-auto mb-4 text-forest-light" size={40} />
-            <h3 className="font-heading text-xl text-white mb-3">
-              Lokal & Regional
-            </h3>
-            <p className="text-white/60 text-sm">
-              Wir beziehen unsere Produkte von Bauern und Produzenten aus der
-              Region. Kurze Wege, frische Ware, persönliche Beziehungen.
-            </p>
-          </div>
-          <div>
-            <MapPin className="mx-auto mb-4 text-forest-light" size={40} />
-            <h3 className="font-heading text-xl text-white mb-3">
-              Für Mürren
-            </h3>
-            <p className="text-white/60 text-sm">
-              Mürren ist unser Zuhause. Wir sind Teil dieser Gemeinde und
-              möchten einen Ort schaffen, der alle willkommen heisst.
-            </p>
-          </div>
-          <div>
-            <Clock className="mx-auto mb-4 text-forest-light" size={40} />
-            <h3 className="font-heading text-xl text-white mb-3">
-              Nachhaltig
-            </h3>
-            <p className="text-white/60 text-sm">
-              Zero Waste ist kein Modewort, sondern Überzeugung. Durch die
-              Verbindung von Laden und Bistro vermeiden wir Verschwendung.
-            </p>
-          </div>
-          </div>
-        </div>
-      </Section>
-
-      {/* Team */}
-      <Section>
-        <h2 className="font-heading text-3xl md:text-4xl text-center text-charcoal mb-12">
-          Das Team
-        </h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {/* Team Member 1 */}
-          <div className="text-center">
-            <div className="aspect-square bg-stone-light/50  mb-4 flex items-center justify-center">
-              <span className="text-charcoal/30 text-sm">team-01.jpg</span>
-            </div>
-            <h3 className="font-heading text-xl text-charcoal mb-1">
-              Name Nachname
-            </h3>
-            <p className="text-gold text-sm mb-3">Rolle / Funktion</p>
-            <p className="text-charcoal/50 text-sm">
-              Kurze Bio des Teammitglieds. Was sie oder ihn antreibt und mit
-              der Alti Metzg verbindet.
-            </p>
-          </div>
-          {/* Team Member 2 */}
-          <div className="text-center">
-            <div className="aspect-square bg-stone-light/50  mb-4 flex items-center justify-center">
-              <span className="text-charcoal/30 text-sm">team-02.jpg</span>
-            </div>
-            <h3 className="font-heading text-xl text-charcoal mb-1">
-              Name Nachname
-            </h3>
-            <p className="text-gold text-sm mb-3">Rolle / Funktion</p>
-            <p className="text-charcoal/50 text-sm">
-              Kurze Bio des Teammitglieds. Was sie oder ihn antreibt und mit
-              der Alti Metzg verbindet.
-            </p>
-          </div>
-          {/* Placeholder for more team members */}
-          <div className="text-center hidden lg:block">
-            <div className="aspect-square bg-stone-light/50  mb-4 flex items-center justify-center">
-              <span className="text-charcoal/30 text-sm">team-03.jpg</span>
-            </div>
-            <h3 className="font-heading text-xl text-charcoal mb-1">
-              Name Nachname
-            </h3>
-            <p className="text-gold text-sm mb-3">Rolle / Funktion</p>
-            <p className="text-charcoal/50 text-sm">
-              Kurze Bio des Teammitglieds. Was sie oder ihn antreibt und mit
-              der Alti Metzg verbindet.
-            </p>
-          </div>
-        </div>
-        <p className="text-center text-charcoal/40 mt-8 text-sm">
-          Fotos und Bios folgen in Kürze.
-        </p>
-      </Section>
-
-      {/* Mürren */}
-      <Section>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-          <div className="order-2 md:order-1">
-            <div className="aspect-video bg-stone-light/50  flex items-center justify-center">
-              <span className="text-charcoal/30 text-sm">muerren-village.jpg</span>
+                {/* Text */}
+                <motion.div
+                  initial="hidden"
+                  whileInView="visible"
+                  viewport={{ once: true }}
+                  variants={revealVariants}
+                  className={index % 2 === 1 ? "lg:col-start-1" : ""}
+                >
+                  <p className="eyebrow-brass mb-4">
+                    {item.label}
+                    {item.year && <span className="ml-2">· {item.year}</span>}
+                  </p>
+                  <h3 className="section-title mb-6" style={{ color: "var(--charcoal)" }}>
+                    {item.title}
+                  </h3>
+                  <p className="body-lg" style={{ color: "var(--charcoal)", opacity: 0.85 }}>
+                    {item.desc}
+                  </p>
+                </motion.div>
+              </div>
             </div>
           </div>
-          <div className="order-1 md:order-2">
-            <h2 className="font-heading text-3xl md:text-4xl text-charcoal mb-6">
-              Mürren
+        ))}
+      </section>
+
+      {/* TEAM - Editorial */}
+      <section className="section-warm-white section-padding-lg">
+        <div className="container-max container-padding">
+          <motion.div
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            variants={revealVariants}
+            className="text-center mb-16"
+          >
+            <p className="eyebrow-brass mb-4">
+              Das Team
+            </p>
+            <h2 className="section-title" style={{ color: "var(--charcoal)" }}>
+              Hinter Alti Metzg
             </h2>
-            <p className="text-charcoal/60 mb-6 leading-relaxed">
-              Mürren ist ein autofreies Bergdorf auf 1&apos;638 Metern über
-              Meer, hoch über dem Lauterbrunnental. Ein Ort, der Ruhe,
-              Natur und Gemeinschaft atmet.
-            </p>
-            <p className="text-charcoal/60 mb-8 leading-relaxed">
-              Die Alti Metzg ist Teil dieses besonderen Ortes. Für die
-              Einwohner und für die Besucher, die die Schönheit der
-              Schweizer Alpen erleben möchten.
-            </p>
-            <Link
-              href="/kontakt"
-              className="inline-flex items-center gap-2 text-gold font-medium hover:gap-3 transition-all"
-            >
-              Anfahrt & Kontakt
-              <ArrowRight size={16} />
-            </Link>
-          </div>
+          </motion.div>
+
+          {/* Team Photo */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8 }}
+            className="relative aspect-[3/2] overflow-hidden mb-12"
+          >
+            <Image
+              src="/images/team-photo.jpg"
+              alt="Das Team"
+              fill
+              className="object-cover"
+              sizes="100vw"
+            />
+          </motion.div>
+
+          {/* Team Names */}
+          <motion.div
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            variants={revealVariants}
+            className="border-t border-charcoal/10 pt-8"
+            style={{ borderColor: "rgba(30,30,28,0.1)" }}
+          >
+            <div className="flex flex-col md:flex-row justify-center gap-8 md:gap-16 text-center">
+              {team.map((member, index) => (
+                <div key={member.name}>
+                  <p className="section-title mb-2" style={{ color: "var(--charcoal)" }}>{member.name}</p>
+                  <p className="body-sm" style={{ color: "var(--aged-brass)" }}>{member.role}</p>
+                </div>
+              ))}
+            </div>
+          </motion.div>
         </div>
-      </Section>
+      </section>
+
+      {/* WERTE - Dark */}
+      <section className="section-charcoal section-padding-lg">
+        <div className="container-narrow container-padding text-center">
+          <motion.blockquote
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            variants={revealVariants}
+            className="display-lg italic mb-8"
+          >
+            Regional.
+          </motion.blockquote>
+          <div className="w-16 h-px mx-auto mb-8" style={{ backgroundColor: "var(--aged-brass)" }} />
+          <motion.blockquote
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            variants={revealVariants}
+            transition={{ delay: 0.1 }}
+            className="display-lg italic mb-8"
+          >
+            Saisonal.
+          </motion.blockquote>
+          <div className="w-16 h-px mx-auto mb-8" style={{ backgroundColor: "var(--aged-brass)" }} />
+          <motion.blockquote
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            variants={revealVariants}
+            transition={{ delay: 0.2 }}
+            className="display-lg italic"
+          >
+            Ehrlich.
+          </motion.blockquote>
+        </div>
+      </section>
 
       {/* CTA */}
-      <Section dark>
-        <div className="text-center">
-          <h2 className="font-heading text-3xl md:text-4xl text-white mb-6">
+      <section className="section-warm-white section-padding-md">
+        <div className="container-max container-padding text-center">
+          <h2 className="section-title mb-6" style={{ color: "var(--charcoal)" }}>
             Besuche uns
           </h2>
-          <p className="text-white/60 mb-8 max-w-xl mx-auto">
+          <p className="body-lg mb-10 max-w-lg mx-auto" style={{ color: "var(--charcoal)", opacity: 0.85 }}>
             Wir freuen uns auf Deinen Besuch. Schau im Dorfladen vorbei,
-            probier unser Bistro oder reserviere das Carnotzet für einen
-            besonderen Abend.
+            probier unser Bistro oder reserviere das Carnotzet.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link
-              href="/kontakt"
-              className="btn-primary"
-            >
+            <Link href="/kontakt" className="btn btn-primary">
               Kontakt
-              <ArrowRight size={18} />
+              <ArrowRight size={14} />
             </Link>
-            <Link
-              href="/dorfladen"
-              className="btn-outline"
-            >
-              Zum Dorfladen
+            <Link href="/carnotzet" className="btn btn-ghost-dark">
+              Carnotzet
             </Link>
           </div>
         </div>
-      </Section>
+      </section>
     </>
   );
 }

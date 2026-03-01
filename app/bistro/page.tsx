@@ -1,222 +1,271 @@
-import PageHero from "@/components/PageHero";
-import Section, { SectionTitle, SectionSubtitle, SectionLabel } from "@/components/Section";
-import BackgroundText from "@/components/BackgroundText";
+"use client";
+
+import { motion } from "framer-motion";
+import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight, Utensils, Leaf, Clock } from "lucide-react";
-import type { Metadata } from "next";
+import { ArrowRight, Utensils } from "lucide-react";
 
-export const metadata: Metadata = {
-  title: "Bistro",
-  description: "Saisonale Speisekarte im Bistro der Alti Metzg. Frisch, regional und ohne Verschwendung – direkt vom Laden in den Teller.",
-};
+const menuCategories = [
+  { category: "Vorspeisen", items: [
+    { name: "Bruschetta al Pomodoro", desc: "Tomaten, Basilikum, Knoblauch", price: "CHF 14" },
+    { name: "Burrata", desc: "San Daniele, Feige, Focaccia", price: "CHF 22" },
+  ]},
+  { category: "Hauptgerichte", items: [
+    { name: "Tagesmenu", desc: "Wechselt täglich – frag nach", price: "~" },
+    { name: "Saisonal wechselnd", desc: "Frisch aus dem Laden", price: "~" },
+  ]},
+  { category: "Desserts", items: [
+    { name: "Hausgemacht", desc: "Süsse Versuchungen aus der Küche", price: "~" },
+  ]},
+];
 
-// Placeholder menu data (will be replaced with Sanity CMS)
-const menuItems = {
-  vorspeisen: [
-    {
-      name: "Saisonal wechselnd",
-      description: "Frische Vorspeisen je nach Saison und Verfügbarkeit",
-      price: null,
-      seasonal: true,
-    },
-  ],
-  hauptgerichte: [
-    {
-      name: "Tagesmenu",
-      description: "Wechselt täglich – frag nach, was die Küche heute zaubert",
-      price: null,
-      seasonal: true,
-    },
-  ],
-  desserts: [
-    {
-      name: "Hausgemacht",
-      description: "Süsse Versuchungen aus der eigenen Küche",
-      price: null,
-      seasonal: true,
-    },
-  ],
+const seasonalDishes = [
+  { title: "Frühling", desc: "Spargel, Rhabarber, frische Kräuter", image: "/images/meal-01.jpg" },
+  { title: "Sommer", desc: "Tomaten, Zucchini, Erdbeeren", image: "/images/meal-02.jpg" },
+  { title: "Herbst & Winter", desc: "Kürbis, Wurzelgemüse, Wild", image: "/images/meal-03.jpg" },
+];
+
+const revealVariants = {
+  hidden: { opacity: 0, y: 30 },
+  visible: { opacity: 1, y: 0 },
 };
 
 export default function BistroPage() {
   return (
     <>
-      <PageHero
-        title="Bistro"
-        imageSrc="/images/bistro-interior.jpg"
-        imageAlt="Bistro Interieur mit Tischen"
-      />
-
-      {/* Philosophy */}
-      <Section>
-        <div className="max-w-3xl mx-auto text-center">
-          <h2 className="font-heading text-3xl md:text-4xl text-charcoal mb-8">
-            Saisonal. Regional. Ohne Verschwendung.
-          </h2>
-          <blockquote className="text-charcoal/80 text-xl md:text-2xl leading-relaxed italic font-heading">
-            &ldquo;In unserem kleinen Bistro bieten wir eine übersichtliche
-            saisonale Speisekarte an, welche sich am Angebot in unserem Laden
-            anlehnen wird, somit erwartet Dich ein vielseitiges und
-            abwechslungsreiches Angebot. Zusätzlich vermeiden wir auf diesem
-            Weg eine Verschwendung der Lebensmittel.&rdquo;
-          </blockquote>
+      {/* Sub-hero - Dark */}
+      <section className="section-charcoal relative h-[50vh] min-h-[400px] flex items-center justify-center overflow-hidden">
+        <Image
+          src="/images/bistro-hero.jpg"
+          alt="Bistro"
+          fill
+          className="object-cover"
+          priority
+          sizes="100vw"
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/40 to-black/70" />
+        <div className="relative z-10 text-center px-6">
+          <motion.h1
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 1 }}
+            className="display-hero text-warm-white mb-4"
+          >
+            Bistro
+          </motion.h1>
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 1, delay: 0.2 }}
+            className="subheading text-warm-white/80"
+          >
+            Saisonale Küche · Zero Waste · Vom Laden in den Teller
+          </motion.p>
         </div>
-      </Section>
+      </section>
 
-      {/* Values */}
-      <Section dark>
-        <div className="relative overflow-hidden">
-          <BackgroundText text="BISTRO" className="top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-white" />
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center relative z-10">
-            <div>
-              <Utensils className="mx-auto mb-4 text-forest-light" size={40} />
-              <SectionTitle light centered={false} className="text-xl mb-3">
-                Vom Laden in den Teller
-              </SectionTitle>
-              <SectionSubtitle light centered={false} className="text-white/70 text-sm">
-                Unsere Speisekarte orientiert sich am aktuellen Angebot im
-                Dorfladen. Was im Regal ist, landet auch auf dem Teller.
-              </SectionSubtitle>
-            </div>
-            <div>
-              <Leaf className="mx-auto mb-4 text-forest-light" size={40} />
-              <SectionTitle light centered={false} className="text-xl mb-3">
-                Zero Waste
-              </SectionTitle>
-              <SectionSubtitle light centered={false} className="text-white/70 text-sm">
-                Wir werfen nichts weg. Durch die enge Verzahnung von Laden und
-                Bistro vermeiden wir Lebensmittelverschwendung konsequent.
-              </SectionSubtitle>
-            </div>
-            <div>
-              <Clock className="mx-auto mb-4 text-forest-light" size={40} />
-              <SectionTitle light centered={false} className="text-xl mb-3">
-                Immer frisch
-              </SectionTitle>
-              <SectionSubtitle light centered={false} className="text-white/70 text-sm">
-                Die Karte wechselt mit der Saison. Immer frisch, immer anders,
-                immer überraschend.
-              </SectionSubtitle>
-            </div>
-          </div>
-        </div>
-      </Section>
-
-      {/* Menu */}
-      <Section>
-        <SectionTitle centered>Speisekarte</SectionTitle>
-        <SectionSubtitle className="mt-4 mb-12">
-          Die Karte wechselt saisonal. Hier ein Überblick unserer Kategorien.
-        </SectionSubtitle>
-
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {/* Vorspeisen */}
-          <div>
-            <h3 className="font-heading text-xl text-forest mb-6 pb-2 border-b border-gold/30">
-              Vorspeisen
-            </h3>
-            <div className="space-y-6">
-              <div className="group">
-                <div className="flex justify-between items-start mb-1">
-                  <h4 className="font-medium text-charcoal">
-                    Saisonal wechselnd
-                  </h4>
-                  <span className="text-forest text-sm">~</span>
-                </div>
-                <p className="text-charcoal/60 text-sm">
-                  Frische Vorspeisen je nach Saison und Verfügbarkeit
-                </p>
-              </div>
-            </div>
-          </div>
-
-          {/* Hauptgerichte */}
-          <div>
-            <h3 className="font-heading text-xl text-forest mb-6 pb-2 border-b border-gold/30">
-              Hauptgerichte
-            </h3>
-            <div className="space-y-6">
-              <div className="group">
-                <div className="flex justify-between items-start mb-1">
-                  <h4 className="font-medium text-charcoal">Tagesmenu</h4>
-                  <span className="text-forest text-sm">~</span>
-                </div>
-                <p className="text-charcoal/60 text-sm">
-                  Wechselt täglich – frag nach, was die Küche heute zaubert
-                </p>
-              </div>
-            </div>
-          </div>
-
-          {/* Desserts */}
-          <div>
-            <h3 className="font-heading text-xl text-forest mb-6 pb-2 border-b border-gold/30">
-              Desserts
-            </h3>
-            <div className="space-y-6">
-              <div className="group">
-                <div className="flex justify-between items-start mb-1">
-                  <h4 className="font-medium text-charcoal">Hausgemacht</h4>
-                  <span className="text-forest text-sm">~</span>
-                </div>
-                <p className="text-charcoal/60 text-sm">
-                  Süsse Versuchungen aus der eigenen Küche
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <p className="text-center text-charcoal/40 mt-12 text-sm">
-          Preise und Gerichte erfährst Du vor Ort – alles ist frisch und
-          saisonal.
-        </p>
-      </Section>
-
-      {/* Food Gallery */}
-      <Section className="!py-12">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          <div className="aspect-square bg-stone-light/50  flex items-center justify-center border border-stone/20">
-            <span className="text-charcoal/30 text-sm">meal-01.jpg</span>
-          </div>
-          <div className="aspect-square bg-stone-light/50  flex items-center justify-center border border-stone/20">
-            <span className="text-charcoal/30 text-sm">meal-02.jpg</span>
-          </div>
-          <div className="aspect-square bg-stone-light/50  flex items-center justify-center border border-stone/20">
-            <span className="text-charcoal/30 text-sm">meal-03.jpg</span>
-          </div>
-          <div className="aspect-square bg-stone-light/50  flex items-center justify-center border border-stone/20">
-            <span className="text-charcoal/30 text-sm">meal-04.jpg</span>
-          </div>
-        </div>
-      </Section>
-
-      {/* CTA */}
-      <Section>
-        <div className="text-center">
-          <SectionTitle>Hungrig geworden?</SectionTitle>
-          <SectionSubtitle className="mt-6">
-            Komm vorbei und lass Dich überraschen. Oder reserviere einen Platz
-            im Carnotzet für einen gemütlichen Abend mit Freunden.
-          </SectionSubtitle>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center mt-10">
-            <Link
-              href="/carnotzet"
-              className="btn-primary"
+      {/* PHILOSOPHIE - Light */}
+      <section className="section-warm-white section-padding-lg">
+        <div className="container-max container-padding">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+            {/* Image */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8 }}
+              className="relative aspect-[4/5] overflow-hidden"
             >
-              Zum Carnotzet
-              <ArrowRight size={18} />
-            </Link>
-            <Link
-              href="/kontakt"
-              className="btn-outline"
+              <Image
+                src="/images/bistro-interior.jpg"
+                alt="Bistro Interieur"
+                fill
+                className="object-cover"
+                sizes="(max-width: 1024px) 100vw, 50vw"
+              />
+            </motion.div>
+
+            {/* Text */}
+            <motion.div
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true }}
+              variants={revealVariants}
             >
-              Kontakt
-              <ArrowRight size={18} />
-            </Link>
+              <p className="eyebrow-brass mb-6">
+                Philosophie
+              </p>
+
+              <blockquote className="section-title italic mb-8" style={{ color: "var(--charcoal)" }}>
+                Vom Laden in den Teller. Zero Waste.
+              </blockquote>
+
+              <p className="body-lg mb-6" style={{ color: "var(--charcoal)", opacity: 0.85 }}>
+                In unserem kleinen Bistro bieten wir eine übersichtliche saisonale Speisekarte an,
+                welche sich am Angebot in unserem Laden anlehnt.
+              </p>
+
+              <p className="body-lg mb-10" style={{ color: "var(--charcoal)", opacity: 0.85 }}>
+                Somit erwartet Dich ein vielseitiges und abwechslungsreiches Angebot.
+                Zusätzlich vermeiden wir auf diesem Weg eine Verschwendung der Lebensmittel.
+              </p>
+
+              <div className="flex items-center gap-4">
+                <Utensils size={20} strokeWidth={1} style={{ color: "var(--aged-brass)" }} />
+                <span className="body-sm opacity-60">Winterkarte 2025/26</span>
+              </div>
+            </motion.div>
           </div>
         </div>
-      </Section>
+      </section>
+
+      {/* SAISONALE GERICHTE - Image cards */}
+      <section className="section-warm-white section-padding-md">
+        <div className="container-max container-padding">
+          <motion.div
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            variants={revealVariants}
+            className="text-center mb-16"
+          >
+            <p className="eyebrow-brass mb-4">
+              Saisonal
+            </p>
+            <h2 className="section-title" style={{ color: "var(--charcoal)" }}>
+              Was die Saison hergibt
+            </h2>
+          </motion.div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {seasonalDishes.map((dish, index) => (
+              <motion.div
+                key={dish.title}
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true }}
+                variants={revealVariants}
+                transition={{ delay: index * 0.1 }}
+                className="group"
+              >
+                <div className="relative aspect-[4/3] overflow-hidden mb-6">
+                  <Image
+                    src={dish.image}
+                    alt={dish.title}
+                    fill
+                    className="object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+                    sizes="(max-width: 768px) 100vw, 33vw"
+                  />
+                </div>
+                <h3 className="section-title mb-2" style={{ color: "var(--charcoal)" }}>
+                  {dish.title}
+                </h3>
+                <p className="body-md" style={{ color: "var(--charcoal)", opacity: 0.7 }}>
+                  {dish.desc}
+                </p>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* SPEISEKARTE - Light */}
+      <section className="section-warm-white section-padding-lg">
+        <div className="container-narrow container-padding">
+          <motion.div
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            variants={revealVariants}
+            className="text-center mb-16"
+          >
+            <p className="eyebrow-brass mb-4">
+              Speisekarte
+            </p>
+            <h2 className="section-title" style={{ color: "var(--charcoal)" }}>
+              Saisonal & Frisch
+            </h2>
+          </motion.div>
+
+          {/* Menu Editorial List */}
+          <div>
+            {menuCategories.map((section, sectionIndex) => (
+              <motion.div
+                key={section.category}
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true }}
+                variants={revealVariants}
+                transition={{ delay: sectionIndex * 0.1 }}
+                className="mb-12"
+              >
+                <h3 className="eyebrow mb-6">{section.category}</h3>
+
+                {section.items.map((item, itemIndex) => (
+                  <div
+                    key={item.name}
+                    className="py-5 border-b border-charcoal/10"
+                    style={{ borderColor: "rgba(30,30,28,0.1)" }}
+                  >
+                    <div className="flex justify-between items-start mb-1">
+                      <h4 className="body-md font-medium" style={{ color: "var(--charcoal)" }}>{item.name}</h4>
+                      <span className="price" style={{ color: "var(--aged-brass)" }}>{item.price}</span>
+                    </div>
+                    <p className="body-sm" style={{ color: "var(--charcoal)", opacity: 0.6 }}>{item.desc}</p>
+                  </div>
+                ))}
+              </motion.div>
+            ))}
+          </div>
+
+          <motion.p
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            variants={revealVariants}
+            className="text-center body-sm mt-8"
+            style={{ color: "var(--charcoal)", opacity: 0.6 }}
+          >
+            Preise und Gerichte wechseln saisonal. Erfahre mehr vor Ort.
+          </motion.p>
+        </div>
+      </section>
+
+      {/* CTA - Brass */}
+      <section className="section-padding-md" style={{ backgroundColor: "var(--aged-brass)" }}>
+        <div className="container-narrow container-padding text-center">
+          <motion.h2
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            variants={revealVariants}
+            className="section-title text-white mb-4"
+          >
+            Tisch reservieren
+          </motion.h2>
+          <motion.p
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            variants={revealVariants}
+            transition={{ delay: 0.1 }}
+            className="body-lg text-white/80 mb-10"
+          >
+            Wir freuen uns auf Dich
+          </motion.p>
+          <Link
+            href="/kontakt"
+            className="btn bg-white text-charcoal hover:bg-warm-white"
+            style={{
+              backgroundColor: "var(--warm-white)",
+              color: "var(--charcoal)"
+            }}
+          >
+            Reservierung
+            <ArrowRight size={14} />
+          </Link>
+        </div>
+      </section>
     </>
   );
 }

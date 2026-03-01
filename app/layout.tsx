@@ -1,28 +1,38 @@
 import type { Metadata } from "next";
-import { Playfair_Display, DM_Sans } from "next/font/google";
+import { Cormorant_Garamond, Inter, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import ScrollProgress from "@/components/ScrollProgress";
 
-const playfair = Playfair_Display({
+const cormorant = Cormorant_Garamond({
   subsets: ["latin"],
-  variable: "--font-playfair",
+  weight: ["400", "500", "600"],
+  style: ["normal", "italic"],
+  variable: "--font-cormorant",
   display: "swap",
 });
 
-const dmSans = DM_Sans({
+const inter = Inter({
   subsets: ["latin"],
-  variable: "--font-dm-sans",
+  weight: ["400", "500"],
+  variable: "--font-inter",
+  display: "swap",
+});
+
+const jetbrains = JetBrains_Mono({
+  subsets: ["latin"],
+  weight: ["400"],
+  variable: "--font-jetbrains",
   display: "swap",
 });
 
 export const metadata: Metadata = {
   title: {
-    default: "Alti Metzg | Dorfladen und Bistro in Mürren",
+    default: "Alti Metzg — Verwurzelt in Mürren",
     template: "%s | Alti Metzg",
   },
-  description: "Alti Metzg - Dorfladen und Bistro in Mürren, Schweiz. Lokale Produkte, saisonale Küche und ein gemütliches Carnotzet.",
+  description: "Alti Metzg — Dorfladen, Bistro und Carnotzet in Mürren. Ein Ort für Einheimische und jene, die es werden möchten. Regional, saisonal, ehrlich.",
   keywords: ["Mürren", "Dorfladen", "Bistro", "Carnotzet", "Schweiz", "lokal", "saisonal", "Alpen", "Bergdorf"],
   authors: [{ name: "Alti Metzg" }],
   creator: "Alti Metzg",
@@ -30,8 +40,8 @@ export const metadata: Metadata = {
     icon: "/icon.svg",
   },
   openGraph: {
-    title: "Alti Metzg | Dorfladen und Bistro",
-    description: "Wo einst eine alte Metzgerei war, erwartet Dich heute ein Dorfladen, Bistro und Carnotzet in Mürren.",
+    title: "Alti Metzg — Dorfladen · Bistro · Carnotzet",
+    description: "Ein Ort für Einheimische. Und für jene, die es werden möchten. Verwurzelt in Mürren.",
     locale: "de_CH",
     type: "website",
     siteName: "Alti Metzg",
@@ -49,7 +59,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="de" className="scroll-smooth">
-      <body className={`${playfair.variable} ${dmSans.variable}`}>
+      <body className={`${cormorant.variable} ${inter.variable} ${jetbrains.variable}`}>
         <ScrollProgress />
         <Navigation />
         <main>{children}</main>

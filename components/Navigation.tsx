@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X } from "lucide-react";
@@ -23,7 +22,7 @@ export default function Navigation() {
 
   useEffect(() => {
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 80);
+      setIsScrolled(window.scrollY > 50);
     };
 
     window.addEventListener("scroll", handleScroll, { passive: true });
@@ -35,15 +34,10 @@ export default function Navigation() {
   }, [pathname]);
 
   useEffect(() => {
-    if (isMobileMenuOpen) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "";
-    }
+    document.body.style.overflow = isMobileMenuOpen ? "hidden" : "";
   }, [isMobileMenuOpen]);
 
-  const showSolidNav = !isHome || isScrolled;
-  const isDarkNav = !showSolidNav;
+  const showBlurredNav = !isHome || isScrolled;
 
   return (
     <>
@@ -52,73 +46,92 @@ export default function Navigation() {
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
         className={`fixed top-0 left-0 right-0 z-50 h-20 transition-all duration-500 ${
-          showSolidNav ? "nav-solid" : "nav-transparent"
+          showBlurredNav
+            ? "nav-blur"
+            : "bg-transparent"
         }`}
       >
-        <div className="max-w-7xl mx-auto px-6 h-full flex items-center justify-between">
-          {/* Logo - just text */}
-          <Link
-            href="/"
-            className="group"
-          >
-            <span className={`font-heading text-2xl tracking-tight transition-colors duration-500 ${
-              showSolidNav ? "text-charcoal" : "text-white"
-            }`}>
+        <div className="max-w-7xl mx-auto px-6 lg:px-16 h-full flex items-center justify-between">
+          {/* Logo */}
+          <Link href="/" className="group flex items-center gap-3">
+            <div
+              className={`w-9 h-9 rounded-full border flex items-center justify-center transition-all duration-500 ${
+                showBlurredNav
+                  ? "border-charcoal text-charcoal"
+                  : "border-white/60 text-white"
+              }`}
+              style={{
+                borderColor: showBlurredNav ? "var(--charcoal)" : "rgba(255,255,255,0.6)",
+                color: showBlurredNav ? "var(--charcoal)" : "white"
+              }}
+            >
+              <span className="font-display text-sm font-medium">AM</span>
+            </div>
+            <span
+              className={`font-display text-lg font-medium transition-colors duration-500 ${
+                showBlurredNav ? "text-charcoal" : "text-white"
+              }`}
+              style={{
+                color: showBlurredNav ? "var(--charcoal)" : "white"
+              }}
+            >
               Alti Metzg
             </span>
           </Link>
 
           {/* Desktop Navigation */}
-          <div className="hidden lg:flex items-center gap-10">
-            {navLinks.map((link, index) => (
-              <motion.div
+          <div className="hidden lg:flex items-center gap-8">
+            {navLinks.map((link) => (
+              <Link
                 key={link.href}
-                initial={{ opacity: 0, y: -10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.1 * index, duration: 0.5 }}
+                href={link.href}
+                className={`nav-link ${
+                  showBlurredNav
+                    ? pathname === link.href
+                      ? "nav-link-dark active"
+                      : "nav-link-dark"
+                    : pathname === link.href
+                    ? "nav-link-light active"
+                    : "nav-link-light"
+                }`}
               >
-                <Link
-                  href={link.href}
-                  className={`relative text-sm font-semibold tracking-wide transition-colors duration-300 ${
-                    showSolidNav
-                      ? "text-charcoal/70 hover:text-charcoal"
-                      : "text-white/70 hover:text-white"
-                  } ${pathname === link.href ? (showSolidNav ? "!text-forest" : "!text-white") : ""}`}
-                >
-                  {link.label}
-                  {pathname === link.href && (
-                    <motion.span
-                      layoutId="nav-indicator"
-                      className={`absolute -bottom-2 left-0 right-0 h-px ${
-                        isDarkNav ? "bg-white/70" : "bg-stone"
-                      }`}
-                      style={{ textUnderlineOffset: "6px" }}
-                      initial={false}
-                      transition={{ duration: 0.3 }}
-                    />
-                  )}
-                </Link>
-              </motion.div>
+                {link.label}
+              </Link>
             ))}
           </div>
 
-          {/* Mobile Menu Button */}
-          <button
-            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            className={`lg:hidden relative w-12 h-12 flex items-center justify-center rounded-full transition-all duration-300 ${
-              showSolidNav
-                ? "bg-forest/10 text-charcoal hover:bg-forest/20"
-                : "bg-white/10 text-white hover:bg-white/20"
-            }`}
-            aria-label={isMobileMenuOpen ? "Menü schliessen" : "Menü öffnen"}
-          >
-            <motion.span
-              animate={{ rotate: isMobileMenuOpen ? 90 : 0 }}
-              transition={{ duration: 0.3 }}
+          {/* Right - CTA */}
+          <div className="flex items-center gap-4">
+            <Link
+              href="/kontakt"
+              className={`hidden md:flex items-center gap-2 px-6 py-2.5 text-[11px] font-medium tracking-[0.1em] uppercase transition-all duration-300 hover:-translate-y-0.5 ${
+                showBlurredNav
+                  ? "bg-charcoal text-warm-white hover:bg-deep-forest"
+                  : "bg-white/10 text-white border border-white/30 hover:bg-white/20"
+              }`}
+              style={{
+                backgroundColor: showBlurredNav ? "var(--charcoal)" : "rgba(255,255,255,0.1)",
+                borderColor: !showBlurredNav ? "rgba(255,255,255,0.3)" : undefined,
+                color: showBlurredNav ? "var(--warm-white)" : "white"
+              }}
+            >
+              Tisch reservieren
+            </Link>
+
+            {/* Mobile Menu Button */}
+            <button
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              className={`lg:hidden w-10 h-10 flex items-center justify-center transition-colors ${
+                showBlurredNav ? "text-charcoal" : "text-white"
+              }`}
+              style={{
+                color: showBlurredNav ? "var(--charcoal)" : "white"
+              }}
+              aria-label={isMobileMenuOpen ? "Menü schliessen" : "Menü öffnen"}
             >
               {isMobileMenuOpen ? <X size={22} /> : <Menu size={22} />}
-            </motion.span>
-          </button>
+            </button>
+          </div>
         </div>
       </motion.nav>
 
@@ -129,46 +142,51 @@ export default function Navigation() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.4 }}
-            className="fixed inset-0 z-40 lg:hidden"
+            transition={{ duration: 0.3 }}
+            className="fixed inset-0 z-40 lg:hidden bg-warm-white"
+            style={{ backgroundColor: "var(--warm-white)" }}
           >
-            {/* Backdrop */}
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className="absolute inset-0 bg-charcoal/80 backdrop-blur-xl"
-              onClick={() => setIsMobileMenuOpen(false)}
-            />
-
-            {/* Menu Content */}
-            <motion.div
-              initial={{ opacity: 0, y: 40 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: 40 }}
-              transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-              className="relative h-full flex flex-col items-center justify-center gap-6"
-            >
+            <div className="h-full flex flex-col items-center justify-center gap-8">
               {navLinks.map((link, index) => (
                 <motion.div
                   key={link.href}
                   initial={{ opacity: 0, y: 30 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.1 + index * 0.08, duration: 0.5 }}
+                  transition={{ delay: 0.1 + index * 0.05 }}
                 >
                   <Link
                     href={link.href}
-                    className={`text-4xl font-heading transition-colors ${
+                    className={`text-3xl font-display tracking-tight transition-colors ${
                       pathname === link.href
-                        ? "text-white"
-                        : "text-white/60 hover:text-white"
+                        ? "text-aged-brass"
+                        : "text-charcoal hover:text-aged-brass"
                     }`}
+                    style={{
+                      color: pathname === link.href ? "var(--aged-brass)" : "var(--charcoal)"
+                    }}
                   >
                     {link.label}
                   </Link>
                 </motion.div>
               ))}
-            </motion.div>
+              <motion.div
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.3 }}
+                className="mt-8"
+              >
+                <Link
+                  href="/kontakt"
+                  className="flex items-center gap-2 px-6 py-3 bg-charcoal text-warm-white text-sm tracking-wider hover:bg-deep-forest transition-all"
+                  style={{
+                    backgroundColor: "var(--charcoal)",
+                    color: "var(--warm-white)"
+                  }}
+                >
+                  Tisch reservieren
+                </Link>
+              </motion.div>
+            </div>
           </motion.div>
         )}
       </AnimatePresence>

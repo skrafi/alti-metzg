@@ -8,6 +8,7 @@ interface SectionProps extends Omit<MotionProps, 'children'> {
   className?: string;
   id?: string;
   dark?: boolean;
+  stone?: boolean;
   fullHeight?: boolean;
 }
 
@@ -16,9 +17,8 @@ export default function Section({
   className = "",
   id,
   dark = false,
+  stone = false,
   fullHeight = false,
-  initial,
-  animate,
   ...props
 }: SectionProps) {
   return (
@@ -27,20 +27,17 @@ export default function Section({
       initial={{ opacity: 0, y: 30 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-100px" }}
-      transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+      transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
       className={`
         relative
-        py-20 md:py-28 lg:py-36
+        py-20 md:py-28 lg:py-32
         ${fullHeight ? 'min-h-screen flex items-center' : ''}
-        ${dark
-          ? 'bg-gradient-radial text-white'
-          : 'bg-[var(--snow)] text-[var(--charcoal)]'
-        }
+        ${dark ? 'section-charcoal' : stone ? 'section-stone' : 'section-warm-white'}
         ${className}
       `}
       {...props}
     >
-      <div className="max-w-7xl mx-auto px-6 w-full">
+      <div className="container-max container-padding w-full">
         {children}
       </div>
     </motion.section>
@@ -63,15 +60,16 @@ export function SectionTitle({
       initial={{ opacity: 0, y: 30 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
-      transition={{ duration: 0.8, delay: 0.1 }}
+      transition={{ duration: 0.7, delay: 0.1 }}
       className={`
-        font-heading
-        text-4xl md:text-5xl lg:text-6xl
-        tracking-tight
+        section-title
         ${centered ? 'text-center mx-auto' : ''}
-        ${light ? 'text-white' : 'text-charcoal'}
+        ${light ? 'text-warm-white' : 'text-charcoal'}
         ${className}
       `}
+      style={{
+        color: light ? "var(--warm-white)" : "var(--charcoal)"
+      }}
     >
       {children}
     </motion.h2>
@@ -94,49 +92,18 @@ export function SectionSubtitle({
       initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
-      transition={{ duration: 0.8, delay: 0.2 }}
+      transition={{ duration: 0.7, delay: 0.2 }}
       className={`
-        text-lg md:text-xl
-        leading-relaxed
+        body-lg
         max-w-2xl
         ${centered ? 'text-center mx-auto' : ''}
-        ${light ? 'text-white/80' : 'text-charcoal/60'}
         ${className}
       `}
+      style={{
+        color: light ? "rgba(246,244,241,0.8)" : "rgba(30,30,28,0.85)"
+      }}
     >
       {children}
     </motion.p>
-  );
-}
-
-export function SectionLabel({
-  children,
-  centered = true,
-  light = false,
-}: {
-  children: ReactNode;
-  centered?: boolean;
-  light?: boolean;
-}) {
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 10 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      transition={{ duration: 0.6 }}
-      className={`
-        flex items-center gap-4 mb-6
-        ${centered ? 'justify-center' : ''}
-      `}
-    >
-      {!centered && <span className="decoration-line" />}
-      <span className={`
-        text-sm font-semibold tracking-[0.2em] uppercase
-        ${light ? 'text-white/70' : 'text-forest'}
-      `}>
-        {children}
-      </span>
-      {centered && <span className="decoration-line" />}
-    </motion.div>
   );
 }

@@ -1,207 +1,235 @@
-import Section from "@/components/Section";
-import OpeningHours from "@/components/OpeningHours";
-import ContactForm from "@/components/ContactForm";
-import { MapPin, Phone, Mail, Train, CableCar, Footprints } from "lucide-react";
-import type { Metadata } from "next";
+"use client";
 
-export const metadata: Metadata = {
-  title: "Kontakt",
-  description: "Kontaktiere die Alti Metzg in Mürren. Adresse, Telefon, Öffnungszeiten und Anfahrt zum autofreien Bergdorf.",
+import { useState, useEffect } from "react";
+import { motion } from "framer-motion";
+import Link from "next/link";
+import { MapPin, Phone, Mail, Train, CableCar, Footprints, ArrowRight } from "lucide-react";
+import ContactForm from "@/components/ContactForm";
+
+const steps = [
+  { icon: Train, title: "Stechelberg", desc: "Auto oder Bus bis Stechelberg, Talstation" },
+  { icon: CableCar, title: "Luftseilbahn", desc: "4 Minuten nach Mürren hochfahren" },
+  { icon: Footprints, title: "Mürren Dorf", desc: "5 Minuten zu Fuss durch das Dorf" },
+  { icon: MapPin, title: "Alti Metzg", desc: "Zaun 990B – direkt im Dorfzentrum" },
+];
+
+const hours = [
+  { day: "Montag", time: "Ruhetag", closed: true },
+  { day: "Dienstag", time: "08:00–18:45" },
+  { day: "Mittwoch", time: "08:00–18:45" },
+  { day: "Donnerstag", time: "08:00–18:45" },
+  { day: "Freitag", time: "08:00–19:15" },
+  { day: "Samstag", time: "08:00–19:15" },
+  { day: "Sonntag", time: "08:00–18:45" },
+];
+
+const revealVariants = {
+  hidden: { opacity: 0, y: 30 },
+  visible: { opacity: 1, y: 0 },
 };
 
-const arrivalSteps = [
-  {
-    step: 1,
-    title: "Stechelberg",
-    description: "Mit dem Auto oder Bus bis Stechelberg, Talstation der Luftseilbahn.",
-    icon: Train,
-  },
-  {
-    step: 2,
-    title: "Luftseilbahn",
-    description: "Mit der Seilbahn in 4 Minuten nach Mürren hochfahren.",
-    icon: CableCar,
-  },
-  {
-    step: 3,
-    title: "Mürren Dorf",
-    description: "Vom Bahnhof ca. 5 Minuten zu Fuss durch das Dorf.",
-    icon: Footprints,
-  },
-  {
-    step: 4,
-    title: "Alti Metzg",
-    description: "Zaun 990B – wir sind direkt im Dorfzentrum.",
-    icon: MapPin,
-  },
-];
+function OpeningHours() {
+  const [currentDayIndex, setCurrentDayIndex] = useState<number | null>(null);
+
+  useEffect(() => {
+    const today = new Date().getDay(); // 0 = Sunday, 1 = Monday, etc.
+    // Convert to our index: Sunday = 6, Monday = 0, Tuesday = 1, etc.
+    const index = today === 0 ? 6 : today - 1;
+    setCurrentDayIndex(index);
+  }, []);
+
+  return (
+    <div className="space-y-3">
+      {hours.map((hour, index) => {
+        const isToday = index === currentDayIndex;
+        return (
+          <div
+            key={hour.day}
+            className={`flex justify-between py-2 ${isToday ? "font-medium" : ""}`}
+            style={{
+              color: isToday ? "var(--charcoal)" : "rgba(30,30,28,0.7)",
+              backgroundColor: isToday ? "rgba(176,141,87,0.1)" : undefined
+            }}
+          >
+            <span className="body-md">{hour.day}</span>
+            <span className="body-sm">{hour.time}</span>
+          </div>
+        );
+      })}
+    </div>
+  );
+}
 
 export default function KontaktPage() {
   return (
     <>
-      {/* Header - Dark Typographic */}
-      <section className="pt-40 pb-24 bg-[#1C1917]">
-        <div className="max-w-7xl mx-auto px-6 text-center">
-          <h1 className="font-heading text-5xl md:text-6xl lg:text-7xl text-white tracking-tight">
+      {/* Header - Dark */}
+      <section className="section-charcoal section-padding-md">
+        <div className="container-narrow container-padding text-center">
+          <motion.h1
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 1 }}
+            className="section-title mb-4"
+          >
             Komm vorbei.
-          </h1>
-          <p className="mt-6 text-white/60 text-xl max-w-2xl mx-auto">
-            Wir freuen uns auf Deinen Besuch oder Deine Nachricht.
-          </p>
+          </motion.h1>
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2 }}
+            className="body-lg opacity-70"
+          >
+            Wir freuen uns auf Dich.
+          </motion.p>
         </div>
       </section>
 
-      {/* How to find us - Horizontal Timeline */}
-      <Section>
-        <div className="max-w-5xl mx-auto">
-          <h2 className="font-heading text-3xl md:text-4xl text-charcoal mb-4 text-center">
-            So findest Du uns
-          </h2>
-          <p className="text-charcoal/60 text-center mb-12 max-w-2xl mx-auto">
-            Mürren ist ein autofreies Bergdorf. Die Anreise ist Teil des Erlebnisses –
-            mit Bahn und Seilbahn hoch in die Berge.
-          </p>
+      {/* ANFAHRT - Timeline */}
+      <section className="section-warm-white section-padding-lg">
+        <div className="container-max container-padding">
+          <motion.div
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            variants={revealVariants}
+            className="text-center mb-16"
+          >
+            <p className="eyebrow-brass mb-4">
+              Anfahrt
+            </p>
+            <h2 className="section-title" style={{ color: "var(--charcoal)" }}>
+              So findest Du uns
+            </h2>
+          </motion.div>
 
           {/* Timeline */}
-          <div className="relative">
-            {/* Connection line */}
-            <div className="hidden md:block absolute top-6 left-0 right-0 h-px bg-stone" />
+          <div className="max-w-4xl mx-auto">
+            <div className="flex justify-between items-start relative">
+              {/* Line */}
+              <div className="absolute top-6 left-0 right-0 h-px" style={{ backgroundColor: "rgba(176,141,87,0.3)" }} />
 
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-8 md:gap-4 relative">
-              {arrivalSteps.map((step, index) => (
-                <div key={step.step} className="relative">
-                  {/* Number */}
-                  <span className="hidden md:block absolute -top-5 left-0 text-charcoal/30 text-sm font-medium">
-                    {String(step.step).padStart(2, '0')}
-                  </span>
-
-                  {/* Content */}
-                  <div className="pt-4 md:pt-8">
-                    <step.icon size={28} className="text-forest mb-4" />
-                    <h3 className="font-heading text-lg text-charcoal mb-2">
-                      {step.title}
-                    </h3>
-                    <p className="text-charcoal/60 text-sm leading-relaxed">
-                      {step.description}
-                    </p>
-                  </div>
-                </div>
+              {steps.map((step, i) => (
+                <motion.div
+                  key={step.title}
+                  initial="hidden"
+                  whileInView="visible"
+                  viewport={{ once: true }}
+                  variants={revealVariants}
+                  transition={{ delay: i * 0.1 }}
+                  className="relative flex-1 text-center px-2"
+                >
+                  <div className="w-3 h-3 rounded-full mx-auto mb-6 relative z-10" style={{ backgroundColor: "var(--aged-brass)" }} />
+                  <step.icon size={24} strokeWidth={1} className="mx-auto mb-3" style={{ color: "var(--charcoal)", opacity: 0.5 }} />
+                  <p className="body-md mb-1" style={{ color: "var(--charcoal)" }}>{step.title}</p>
+                  <p className="body-sm" style={{ color: "var(--charcoal)", opacity: 0.6 }}>{step.desc}</p>
+                </motion.div>
               ))}
             </div>
           </div>
         </div>
-      </Section>
+      </section>
 
-      {/* Contact Info & Form */}
-      <Section>
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16">
-          {/* Contact Info */}
-          <div>
-            <h2 className="font-heading text-2xl md:text-3xl text-charcoal mb-8">
-              So erreichst Du uns
-            </h2>
+      {/* KONTAKT + FORM */}
+      <section className="section-warm-white section-padding-lg">
+        <div className="container-max container-padding">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
+            {/* Left - Contact Info */}
+            <motion.div
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true }}
+              variants={revealVariants}
+            >
+              <h2 className="section-title mb-10" style={{ color: "var(--charcoal)" }}>
+                So erreichst Du uns
+              </h2>
 
-            {/* Address - clickable to Google Maps */}
-            <div className="mb-8">
+              {/* Address */}
               <a
                 href="https://www.google.com/maps/search/?api=1&query=Zaun+990B+3825+Mürren+Schweiz"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-start gap-4 mb-4 p-4 -mx-4 hover:bg-forest/5 transition-colors group"
+                className="flex items-start gap-4 mb-8 group"
               >
-                <MapPin size={24} className="text-gold mt-1 shrink-0 group-hover:scale-110 transition-transform" />
+                <MapPin size={20} className="mt-1 shrink-0" strokeWidth={1} style={{ color: "var(--aged-brass)" }} />
                 <div>
-                  <h3 className="font-medium text-charcoal mb-1 group-hover:text-forest transition-colors">
-                    Adresse
-                    <span className="ml-2 text-xs text-forest/60 opacity-0 group-hover:opacity-100 transition-opacity">
-                      In Google Maps öffnen →
-                    </span>
-                  </h3>
-                  <p className="text-charcoal/60">
-                    Zaun 990B<br />
-                    3825 Mürren<br />
-                    Schweiz
+                  <p className="body-xs mb-1" style={{ color: "var(--charcoal)", opacity: 0.6 }}>Adresse</p>
+                  <p className="section-title mb-1 group-hover:text-aged-brass transition-colors" style={{ color: "var(--charcoal)" }}>
+                    Zaun 990B
+                  </p>
+                  <p className="body-md" style={{ color: "var(--charcoal)", opacity: 0.7 }}>3825 Mürren, Schweiz</p>
+                </div>
+              </a>
+
+              {/* Phone */}
+              <a href="tel:+41335258817" className="flex items-center gap-4 mb-8 group">
+                <Phone size={20} className="shrink-0" strokeWidth={1} style={{ color: "var(--aged-brass)" }} />
+                <div>
+                  <p className="body-xs mb-1" style={{ color: "var(--charcoal)", opacity: 0.6 }}>Telefon</p>
+                  <p className="section-title group-hover:text-aged-brass transition-colors" style={{ color: "var(--charcoal)" }}>
+                    033 525 88 17
                   </p>
                 </div>
               </a>
-            </div>
 
-            {/* Phone - tel: link */}
-            <div className="mb-8">
-              <a 
-                href="tel:+41335258817"
-                className="flex items-center gap-4 p-4 -mx-4  hover:bg-forest/5 transition-colors group"
-              >
-                <Phone size={20} className="text-gold shrink-0 group-hover:scale-110 transition-transform" />
+              {/* Email */}
+              <a href="mailto:muh@alti-metzg.ch" className="flex items-center gap-4 mb-12 group">
+                <Mail size={20} className="shrink-0" strokeWidth={1} style={{ color: "var(--aged-brass)" }} />
                 <div>
-                  <h3 className="font-medium text-charcoal mb-1 group-hover:text-forest transition-colors">Telefon</h3>
-                  <span className="text-charcoal/60 group-hover:text-gold transition-colors">
-                    033 525 88 17
-                  </span>
-                </div>
-              </a>
-            </div>
-
-            {/* Email */}
-            <div className="mb-12">
-              <a 
-                href="mailto:muh@alti-metzg.ch"
-                className="flex items-center gap-4 p-4 -mx-4  hover:bg-forest/5 transition-colors group"
-              >
-                <Mail size={20} className="text-gold shrink-0 group-hover:scale-110 transition-transform" />
-                <div>
-                  <h3 className="font-medium text-charcoal mb-1 group-hover:text-forest transition-colors">E-Mail</h3>
-                  <span className="text-charcoal/60 group-hover:text-gold transition-colors">
+                  <p className="body-xs mb-1" style={{ color: "var(--charcoal)", opacity: 0.6 }}>E-Mail</p>
+                  <p className="section-title group-hover:text-aged-brass transition-colors" style={{ color: "var(--charcoal)" }}>
                     muh@alti-metzg.ch
-                  </span>
+                  </p>
                 </div>
               </a>
-            </div>
 
-            {/* Opening Hours */}
-            <div>
-              <h3 className="font-heading text-xl text-charcoal mb-6">
-                Öffnungszeiten
-              </h3>
-              <OpeningHours />
-            </div>
-          </div>
+              {/* Opening Hours */}
+              <div>
+                <p className="eyebrow mb-6">Öffnungszeiten</p>
+                <OpeningHours />
+              </div>
+            </motion.div>
 
-          {/* Contact Form */}
-          <div>
-            <h2 className="font-heading text-2xl md:text-3xl text-charcoal mb-8">
-              Nachricht senden
-            </h2>
-            <ContactForm />
+            {/* Right - Form */}
+            <motion.div
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true }}
+              variants={revealVariants}
+            >
+              <h2 className="section-title mb-10" style={{ color: "var(--charcoal)" }}>
+                Nachricht senden
+              </h2>
+              <ContactForm />
+            </motion.div>
           </div>
         </div>
-      </Section>
+      </section>
 
-      {/* Map */}
-      <Section className="!pt-0">
-        <h2 className="font-heading text-2xl md:text-3xl text-charcoal mb-8 text-center">
-          Anfahrt
-        </h2>
-        <a 
-          href="https://www.google.com/maps/search/?api=1&query=Zaun+990B+3825+Mürren+Schweiz"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="block aspect-video bg-gradient-to-br from-forest/5 to-stone-light/30  flex items-center justify-center hover:from-forest/10 transition-colors group cursor-pointer relative overflow-hidden"
-        >
-          {/* Decorative pattern */}
-          <div className="absolute inset-0 opacity-10" style={{
-            backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%231B4332' fill-opacity='0.3'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
-          }} />
-          
-          <div className="text-center relative z-10">
-            <MapPin size={48} className="mx-auto mb-4 text-forest group-hover:scale-110 transition-transform" />
-            <p className="text-charcoal font-medium mb-2">In Google Maps öffnen</p>
-            <p className="text-charcoal/50 text-sm max-w-md px-4">
-              Zaun 990B, 3825 Mürren – ein autofreies Bergdorf auf 1'638 m ü. M.
-            </p>
-          </div>
-        </a>
-      </Section>
+      {/* MAP */}
+      <section className="section-warm-white section-padding-md">
+        <div className="container-max container-padding">
+          <a
+            href="https://www.google.com/maps/search/?api=1&query=Zaun+990B+3825+Mürren+Schweiz"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="block relative aspect-video overflow-hidden group cursor-pointer border border-charcoal/10"
+            style={{ borderColor: "rgba(30,30,28,0.1)" }}
+          >
+            <iframe
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2723.1!2d7.9!3d46.6!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zNDbCsDM2JzAwLjAiTiA3wrA1NCcwMC4wIkU!5e0!3m2!1sde!2sch!4v1234567890"
+              width="100%"
+              height="100%"
+              style={{ border: 0 }}
+              allowFullScreen
+              loading="lazy"
+              referrerPolicy="no-referrer-when-downgrade"
+            />
+            <div className="absolute inset-0 bg-transparent group-hover:bg-charcoal/5 transition-colors pointer-events-none" />
+          </a>
+        </div>
+      </section>
     </>
   );
 }

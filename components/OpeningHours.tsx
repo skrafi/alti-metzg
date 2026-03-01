@@ -1,77 +1,45 @@
 "use client";
 
-import { motion } from "framer-motion";
-
-interface OpeningHoursProps {
-  compact?: boolean;
-}
-
 const hours = [
-  { day: "Montag", closed: true },
-  { day: "Dienstag", open: "08:00", close: "18:45" },
-  { day: "Mittwoch", open: "08:00", close: "18:45" },
-  { day: "Donnerstag", open: "08:00", close: "18:45" },
-  { day: "Freitag", open: "08:00", close: "19:15" },
-  { day: "Samstag", open: "08:00", close: "19:15" },
-  { day: "Sonntag", open: "08:00", close: "18:45" },
+  { day: "Mo", time: "Ruhetag", closed: true },
+  { day: "Di", time: "08:00 – 18:45" },
+  { day: "Mi", time: "08:00 – 18:45" },
+  { day: "Do", time: "08:00 – 18:45" },
+  { day: "Fr", time: "08:00 – 19:15" },
+  { day: "Sa", time: "08:00 – 19:15" },
+  { day: "So", time: "08:00 – 18:45" },
 ];
 
-export default function OpeningHours({ compact = false }: OpeningHoursProps) {
-  const today = new Date().getDay();
-  const todayIndex = today === 0 ? 6 : today - 1;
-
-  if (compact) {
-    const todayHours = hours[todayIndex];
-    return (
-      <div className="inline-flex items-center gap-3 px-4 py-2 bg-forest/10 border border-forest/20">
-        <span className="w-2 h-2 bg-forest-light rounded-full animate-pulse" />
-        <span className="text-sm font-medium text-charcoal">
-          Heute:{" "}
-          {todayHours.closed ? (
-            <span className="text-charcoal/50">Ruhetag</span>
-          ) : (
-            <span className="text-forest font-semibold">
-              {todayHours.open} – {todayHours.close}
-            </span>
-          )}
-        </span>
-      </div>
-    );
-  }
+export default function OpeningHours() {
+  const todayIndex = new Date().getDay() === 0 ? 6 : new Date().getDay() - 1;
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      className="hours-grid"
-    >
+    <div className="space-y-3">
       {hours.map((item, index) => {
         const isToday = index === todayIndex;
-        const isClosed = item.closed;
 
         return (
           <div
             key={item.day}
-            className={`hours-row ${isToday ? "today" : ""} ${isClosed ? "closed" : ""}`}
+            className={`flex justify-between items-center py-2 border-b border-charcoal/10 ${
+              isToday ? "font-medium" : ""
+            }`}
+            style={{
+              borderColor: "rgba(30,30,28,0.1)",
+              color: isToday ? "var(--charcoal)" : "rgba(30,30,28,0.7)",
+              backgroundColor: isToday ? "rgba(176,141,87,0.1)" : undefined
+            }}
           >
-            <span className="font-medium flex items-center gap-2">
-              {isToday && <span className="w-2 h-2 bg-current rounded-full" />}
+            <span className="body-sm">
               {item.day}
-              {isToday && <span className="text-xs opacity-80">(Heute)</span>}
+              {isToday && <span className="ml-2 text-xs" style={{ color: "var(--aged-brass)" }}>Heute</span>}
             </span>
-            <span className={`text-right ${isClosed ? "italic" : ""}`}>
-              {isClosed ? (
-                "Ruhetag"
-              ) : (
-                <span className="font-semibold">
-                  {item.open} – {item.close}
-                </span>
-              )}
+            <span className={`body-sm ${item.closed ? "italic" : ""}`}>
+              {item.time}
             </span>
           </div>
         );
       })}
-    </motion.div>
+    </div>
   );
 }
