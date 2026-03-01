@@ -2,259 +2,74 @@
 
 import { motion } from "framer-motion";
 import Image from "next/image";
-import Link from "next/link";
-import { ArrowRight } from "lucide-react";
+import GlobalFooter from "@/components/GlobalFooter";
+
+const colors = { charcoal: "#0F0E0C", brass: "#B08D57", white: "#FFFFFF", stone: "#F6F4F1" };
 
 const timeline = [
-  {
-    label: "Früher",
-    year: "",
-    title: "Alte Metzgerei",
-    desc: "Ein traditioneller Ort im Herzen von Mürren. Fleisch und Wurstwaren nach alter Tradition.",
-    image: "/images/old-butcher.jpg",
-  },
-  {
-    label: "Die Idee",
-    year: "2021",
-    title: "Neubeginn",
-    desc: "Die Vision eines Dorfladens mit Bistro – ein Ort für Einheimische und Gäste.",
-    image: "/images/renovation.jpg",
-  },
-  {
-    label: "Heute",
-    year: "",
-    title: "Drei Welten",
-    desc: "Dorfladen, Bistro und Carnotzet unter einem Dach. Verwurzelt in Mürren.",
-    image: "/images/team-photo.jpg",
-  },
+  { year: "1850", title: "Die Gründung", desc: "Ur-Ur-Grossvater eröffnet die Metzgerei in Mürren.", img: "/images/dorfladen-shelves.jpg" },
+  { year: "1920", title: "Zweite Generation", desc: "Der Sohn übernimmt und erweitert das Angebot.", img: "/images/bistro-interior.jpg" },
+  { year: "1955", title: "Die goldene Ära", desc: "Mürren blüht auf – die Metzgerei wird zum Treffpunkt.", img: "/images/carnotzet-interior.jpg" },
+  { year: "1985", title: "Dorfladen", desc: "Die Idee: Produkte direkt vom Bauern an die Gäste.", img: "/images/dorfladen-shelves.jpg" },
+  { year: "2021", title: "Carnotzet", desc: "Aus dem Keller wird ein exklusiver Weinkeller.", img: "/images/bistro-interior.jpg" },
+  { year: "HEUTE", title: "Tradition trifft Moderne", desc: "Regional. Saisonal. Ehrlich. Seit fast 175 Jahren.", img: "/images/carnotzet-interior.jpg" }
 ];
 
-const team = [
-  { name: "Name Nachname", role: "Geschäftsführung" },
-  { name: "Name Nachname", role: "Küche" },
-  { name: "Name Nachname", role: "Laden" },
-];
-
-const revealVariants = {
-  hidden: { opacity: 0, y: 30 },
-  visible: { opacity: 1, y: 0 },
-};
-
-export default function UeberUnsPage() {
+export default function UberUnsPage() {
   return (
     <>
-      {/* Header - Light */}
-      <section className="section-warm-white section-padding-md">
-        <div className="container-narrow container-padding text-center">
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="eyebrow-brass mb-6"
-          >
-            Über uns
-          </motion.p>
-          <motion.h1
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1 }}
-            className="display-hero mb-8"
-            style={{ color: "var(--charcoal)" }}
-          >
-            Wir sind
-          </motion.h1>
-          <motion.h1
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1, delay: 0.2 }}
-            className="display-hero"
-            style={{ color: "var(--aged-brass)", fontWeight: 500 }}
-          >
-            Alti Metzg.
-          </motion.h1>
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.4 }}
-            className="body-lg mt-8"
-            style={{ color: "var(--charcoal)", opacity: 0.85 }}
-          >
-            Wo einst eine alte Metzgerei war, erwartet Dich heute ein Dorfladen,
-            Bistro und Carnotzet in Mürren.
-          </motion.p>
-        </div>
-      </section>
-
-      {/* GESCHICHTE - Timeline with images */}
-      <section className="section-warm-white">
-        {timeline.map((item, index) => (
-          <div
-            key={item.label}
-            className={`py-16 lg:py-24 ${index > 0 ? "border-t border-charcoal/10" : ""}`}
-            style={{
-              borderColor: index > 0 ? "rgba(30,30,28,0.1)" : undefined,
-              backgroundColor: index % 2 === 1 ? "rgba(206,200,190,0.15)" : undefined
-            }}
-          >
-            <div className="container-max container-padding">
-              <div className={`grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center ${
-                index % 2 === 1 ? "lg:grid-flow-col-dense" : ""
-              }`}>
-                {/* Image */}
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  whileInView={{ opacity: 1 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.8 }}
-                  className={`relative aspect-[4/3] overflow-hidden ${index % 2 === 1 ? "lg:col-start-2" : ""}`}
-                >
-                  <Image
-                    src={item.image}
-                    alt={item.title}
-                    fill
-                    className="object-cover"
-                    sizes="(max-width: 1024px) 100vw, 50vw"
-                  />
-                </motion.div>
-
-                {/* Text */}
-                <motion.div
-                  initial="hidden"
-                  whileInView="visible"
-                  viewport={{ once: true }}
-                  variants={revealVariants}
-                  className={index % 2 === 1 ? "lg:col-start-1" : ""}
-                >
-                  <p className="eyebrow-brass mb-4">
-                    {item.label}
-                    {item.year && <span className="ml-2">· {item.year}</span>}
-                  </p>
-                  <h3 className="section-title mb-6" style={{ color: "var(--charcoal)" }}>
-                    {item.title}
-                  </h3>
-                  <p className="body-lg" style={{ color: "var(--charcoal)", opacity: 0.85 }}>
-                    {item.desc}
-                  </p>
-                </motion.div>
-              </div>
-            </div>
-          </div>
-        ))}
-      </section>
-
-      {/* TEAM - Editorial */}
-      <section className="section-warm-white section-padding-lg">
-        <div className="container-max container-padding">
-          <motion.div
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            variants={revealVariants}
-            className="text-center mb-16"
-          >
-            <p className="eyebrow-brass mb-4">
-              Das Team
-            </p>
-            <h2 className="section-title" style={{ color: "var(--charcoal)" }}>
-              Hinter Alti Metzg
-            </h2>
+      <div style={{ background: colors.white, minHeight: "100vh" }}>
+        {/* Hero - Timeline Concept */}
+        <section style={{ height: "85vh", position: "relative", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: "40px", background: colors.charcoal }}>
+          <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 1 }} style={{ textAlign: "center" }}>
+            <p style={{ fontFamily: "Inter, system-ui, sans-serif", fontSize: "11px", letterSpacing: "0.4em", textTransform: "uppercase", color: colors.brass, marginBottom: "24px" }}>Seit 1850</p>
+            <h1 style={{ fontFamily: "Cormorant Garamond, Georgia, serif", fontWeight: 300, fontSize: "clamp(64px, 12vw, 140px)", color: colors.white, lineHeight: 0.85, marginBottom: "32px" }}>174</h1>
+            <p style={{ fontFamily: "Inter, system-ui, sans-serif", fontSize: "16px", color: "rgba(255,255,255,0.6)", letterSpacing: "0.1em" }}>Jahre Tradition</p>
           </motion.div>
+        </section>
 
-          {/* Team Photo */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8 }}
-            className="relative aspect-[3/2] overflow-hidden mb-12"
-          >
-            <Image
-              src="/images/team-photo.jpg"
-              alt="Das Team"
-              fill
-              className="object-cover"
-              sizes="100vw"
-            />
-          </motion.div>
+        {/* Vertical Timeline */}
+        <section style={{ padding: "100px 60px", background: colors.white, position: "relative" }}>
+          {/* Center line */}
+          <div style={{ position: "absolute", left: "50%", top: 0, bottom: 0, width: "1px", background: colors.charcoal, opacity: 0.1 }} />
 
-          {/* Team Names */}
-          <motion.div
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            variants={revealVariants}
-            className="border-t border-charcoal/10 pt-8"
-            style={{ borderColor: "rgba(30,30,28,0.1)" }}
-          >
-            <div className="flex flex-col md:flex-row justify-center gap-8 md:gap-16 text-center">
-              {team.map((member, index) => (
-                <div key={member.name}>
-                  <p className="section-title mb-2" style={{ color: "var(--charcoal)" }}>{member.name}</p>
-                  <p className="body-sm" style={{ color: "var(--aged-brass)" }}>{member.role}</p>
+          <div style={{ maxWidth: "1000px", margin: "0 auto" }}>
+            {timeline.map((item, i) => (
+              <motion.div key={item.year} initial={{ opacity: 0, x: i % 2 === 0 ? -50 : 50 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 0.8, delay: i * 0.15 }} style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "60px", marginBottom: i < timeline.length - 1 ? "120px" : "0", alignItems: "center" }}>
+                {/* Image - alternates left/right */}
+                <div style={{ position: "relative", aspectRatio: "16/10", overflow: "hidden", order: i % 2 === 0 ? 1 : 0 }}>
+                  <Image src={item.img} alt={item.title} fill style={{ objectFit: "cover", filter: "grayscale(100%) brightness(0.95)" }} />
                 </div>
-              ))}
-            </div>
-          </motion.div>
-        </div>
-      </section>
 
-      {/* WERTE - Dark */}
-      <section className="section-charcoal section-padding-lg">
-        <div className="container-narrow container-padding text-center">
-          <motion.blockquote
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            variants={revealVariants}
-            className="display-lg italic mb-8"
-          >
-            Regional.
-          </motion.blockquote>
-          <div className="w-16 h-px mx-auto mb-8" style={{ backgroundColor: "var(--aged-brass)" }} />
-          <motion.blockquote
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            variants={revealVariants}
-            transition={{ delay: 0.1 }}
-            className="display-lg italic mb-8"
-          >
-            Saisonal.
-          </motion.blockquote>
-          <div className="w-16 h-px mx-auto mb-8" style={{ backgroundColor: "var(--aged-brass)" }} />
-          <motion.blockquote
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            variants={revealVariants}
-            transition={{ delay: 0.2 }}
-            className="display-lg italic"
-          >
-            Ehrlich.
-          </motion.blockquote>
-        </div>
-      </section>
-
-      {/* CTA */}
-      <section className="section-warm-white section-padding-md">
-        <div className="container-max container-padding text-center">
-          <h2 className="section-title mb-6" style={{ color: "var(--charcoal)" }}>
-            Besuche uns
-          </h2>
-          <p className="body-lg mb-10 max-w-lg mx-auto" style={{ color: "var(--charcoal)", opacity: 0.85 }}>
-            Wir freuen uns auf Deinen Besuch. Schau im Dorfladen vorbei,
-            probier unser Bistro oder reserviere das Carnotzet.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link href="/kontakt" className="btn btn-primary min-h-[44px] min-w-[44px]">
-              Kontakt
-              <ArrowRight size={14} />
-            </Link>
-            <Link href="/carnotzet" className="btn btn-ghost-dark min-h-[44px] min-w-[44px]">
-              Carnotzet
-            </Link>
+                {/* Content - alternates right/left */}
+                <div style={{ order: i % 2 === 0 ? 0 : 1, textAlign: i % 2 === 0 ? "right" : "left" }}>
+                  <span style={{ fontFamily: "Cormorant Garamond, Georgia, serif", fontSize: "72px", fontWeight: 300, color: colors.brass, opacity: 0.3, display: "block", marginBottom: "16px" }}>{item.year}</span>
+                  <h3 style={{ fontFamily: "Cormorant Garamond, Georgia, serif", fontSize: "32px", color: colors.charcoal, marginBottom: "16px" }}>{item.title}</h3>
+                  <p style={{ fontFamily: "Inter, system-ui, sans-serif", fontSize: "15px", color: "rgba(15,14,12,0.6)", lineHeight: 1.7 }}>{item.desc}</p>
+                </div>
+              </motion.div>
+            ))}
           </div>
-        </div>
-      </section>
+        </section>
+
+        {/* Numbers Section */}
+        <section style={{ padding: "100px 60px", background: colors.stone }}>
+          <div style={{ maxWidth: "1200px", margin: "0 auto", display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "40px", textAlign: "center" }}>
+            {[
+              { num: "1850", label: "Gründungsjahr" },
+              { num: "174", label: "Jahre Tradition" },
+              { num: "4", label: "Generationen" },
+              { num: "3", label: "Standorte" }
+            ].map((stat, i) => (
+              <motion.div key={i} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }}>
+                <span style={{ fontFamily: "Cormorant Garamond, Georgia, serif", fontSize: "clamp(48px, 6vw, 72px)", color: colors.brass, display: "block", marginBottom: "8px" }}>{stat.num}</span>
+                <p style={{ fontFamily: "Inter, system-ui, sans-serif", fontSize: "13px", textTransform: "uppercase", letterSpacing: "0.15em", color: "rgba(15,14,12,0.6)" }}>{stat.label}</p>
+              </motion.div>
+            ))}
+          </div>
+        </section>
+      </div>
+      <GlobalFooter />
     </>
   );
 }
