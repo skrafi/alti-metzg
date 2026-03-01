@@ -104,14 +104,15 @@ export default function Navigation() {
           <div className="flex items-center gap-4">
             <Link
               href="/kontakt"
-              className={`hidden md:flex items-center justify-center gap-2 px-6 py-3 min-h-[44px] text-[11px] font-medium tracking-[0.1em] uppercase transition-all duration-300 hover:-translate-y-0.5 ${
+              className={`hidden md:flex items-center justify-center gap-2 px-6 py-2.5 min-h-[44px] text-[11px] font-medium tracking-[0.1em] uppercase transition-all duration-300 hover:-translate-y-0.5 ${
                 showBlurredNav
                   ? "bg-charcoal text-warm-white hover:bg-deep-forest"
-                  : "bg-charcoal/90 text-white hover:bg-charcoal shadow-lg"
+                  : "bg-white/10 text-white border border-white/30 hover:bg-white/20"
               }`}
               style={{
-                backgroundColor: showBlurredNav ? "var(--charcoal)" : "rgba(30,30,28,0.9)",
-                color: "var(--warm-white)"
+                backgroundColor: showBlurredNav ? "var(--charcoal)" : "rgba(255,255,255,0.1)",
+                borderColor: !showBlurredNav ? "rgba(255,255,255,0.3)" : undefined,
+                color: showBlurredNav ? "var(--warm-white)" : "white"
               }}
             >
               Tisch reservieren
